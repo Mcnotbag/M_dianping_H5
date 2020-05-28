@@ -7,7 +7,7 @@ import random
 
 class DaZhongDianPing():
     def __init__(self):
-        self.url = "http://www.dianping.com/shop/G9TSD2JvdLtA7fdm/review_all"
+        self.url = "http://www.dianping.com/shop/k9H9LPBySg7envDa/review_all"
         # 页面 html
         self.html = None
         # 页面字体大小
@@ -110,9 +110,9 @@ class DaZhongDianPing():
         """
 
         # 地址css标签
-        # address_class_list = re.findall('\.%s(.*?){background:(.*?)px (.*?)px;}' % address_prefix, self.css, re.S)
+        address_class_list = re.findall('\.%s(.*?){background:(.*?)px (.*?)px;}' % address_prefix, self.css, re.S)
         # 电话css标签
-        # tell_class_list = re.findall('\.%s(.*?){background:(.*?)px (.*?)px;}' % tell_prefix, self.css, re.S)
+        tell_class_list = re.findall('\.%s(.*?){background:(.*?)px (.*?)px;}' % tell_prefix, self.css, re.S)
         # 评论css标签
         review_class_list = re.findall('\.%s(.*?){background:(.*?)px (.*?)px;}' % review_prefix, self.css, re.S)
 
@@ -130,7 +130,7 @@ class DaZhongDianPing():
             self.review_font_map = self.review_class_to_font(review_class_list, review_svg_y_words, review_prefix)
         #地址
         # address_result = re.findall('<textPath xlink:href="#(\d+)" textLength=".*?">(.*?)</textPath>', self.address_svg, re.S)
-        # 电话
+        #电话
         # tell_result = re.search('<text x="(.*?)" y=".*?">(.*?)</text>', self.tell_svg, re.S)
         # tell_x_list = tell_result.group(1).split(' ')
         # tell_words_str = tell_result.group(2)
@@ -138,9 +138,9 @@ class DaZhongDianPing():
         # address_words_dc = dict(address_result)
         # self.address_font_map = self.address_class_to_font(address_class_list, address_svg_y_list, address_words_dc, address_prefix)
         # self.tell_font_map = self.tell_class_to_num(tell_class_list, tell_x_list, tell_words_str, tell_prefix)
-        print(self.address_font_map)
+        # print(self.address_font_map)
         print(self.review_font_map)
-        print(self.tell_font_map)
+        # print(self.tell_font_map)
 
     def review_class_to_font(self, class_list, y_words, prefix):
         tmp_dc = dict()
@@ -183,21 +183,28 @@ class DaZhongDianPing():
 
     def get_shop_info(self):
         # 将 self.html 商铺地址加密的 class 样式替换成对应的中文字符
-        address_class_set = re.findall('<bb class="(.*?)"></bb>', self.html, re.S)
-        for class_name in address_class_set:
-            self.html = re.sub('<bb class="{}"></bb>'.format(class_name), self.address_font_map[class_name], self.html)
+        # address_class_set = re.findall('<bb class="(.*?)"></bb>', self.html, re.S)
+        # for class_name in address_class_set:
+        #     self.html = re.sub('<bb class="{}"></bb>'.format(class_name), self.address_font_map[class_name], self.html)
 
         # 将 self.html 电话号码加密的 class 样式替换成对应的数字
-        tell_class_set = re.findall('<cc class="(.*?)"></cc>', self.html, re.S)
-        for class_name in tell_class_set:
-            self.html = re.sub('<cc class="{}"></cc>'.format(class_name), self.tell_font_map[class_name], self.html)
-
+        # tell_class_set = re.findall('<cc class="(.*?)"></cc>', self.html, re.S)
+        # for class_name in tell_class_set:
+        #     self.html = re.sub('<cc class="{}"></cc>'.format(class_name), self.tell_font_map[class_name], self.html)
+        #
+        # tree = etree.HTML(self.html)
+        # shop_address = tree.xpath('//div[@class="address-info"]/text()')[0].replace('&nbsp;','').replace('\n','').replace(' ', '')
+        # shop_tell = tree.xpath('//div[@class="phone-info"]/text()')[0].replace('&nbsp;','').replace('\n','').replace(' ', '')
+        #
+        # print(f'地址：{shop_address}\n电话：{shop_tell}')
         tree = etree.HTML(self.html)
-        shop_address = tree.xpath('//div[@class="address-info"]/text()')[0].replace('&nbsp;','').replace('\n','').replace(' ', '')
-        shop_tell = tree.xpath('//div[@class="phone-info"]/text()')[0].replace('&nbsp;','').replace('\n','').replace(' ', '')
-
-        print(f'地址：{shop_address}\n电话：{shop_tell}')
-
+        comment_cnt = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='reviews']/text()"))
+        avg_speed = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='price']/text()"))
+        pro_score = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[1]/text()"))
+        env_score = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[2]/text()"))
+        ser_score = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[3]/text()"))
+        kwargs = {}
+        print(comment_cnt,avg_speed,pro_score,env_score,ser_score)
 
     def get_user_info(self):
         # 将 self.html 评论区域加密的 class 样式替换成对应的中文字符
@@ -224,7 +231,7 @@ class DaZhongDianPing():
         self.get_svg_html()
         self.get_max_pages()
         self.get_font_map()
-        # self.get_shop_info()
+        self.get_shop_info()
         self.get_user_info()
 
 if __name__ == '__main__':
