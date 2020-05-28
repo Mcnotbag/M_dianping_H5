@@ -1,0 +1,73 @@
+#coding=utf-8
+import os
+import random
+from time import sleep
+
+import requests
+from lxml import etree
+from tools.proxy import taiyang_proxy
+with open('../ch10_list.html','r',encoding='utf-8') as f:
+    text = f.read()
+
+headers = {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'Accept-Encoding': 'gzip, deflate',
+            'Accept-Language': 'zh-CN,zh;q=0.9',
+            'Cache-Control': 'max-age=0',
+            'Connection': 'keep-alive',
+            'Host': 'www.dianping.com',
+            'Referer': 'http://www.dianping.com/shenzhen/ch10',
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
+        }
+def category():
+    html = etree.HTML(text)
+    urls = html.xpath('//div[@id="classfy"]/a/@href')
+    titles_1 = html.xpath('//div[@id="classfy"]/a/span/text()')
+    for ind,url in enumerate(urls):
+        print(url)
+        filename = url.split('/')[-1] + '$' + titles_1[ind] + '.txt'
+        filenames = [i for i in os.listdir('../category')]
+        if filename in filenames:
+            print(filename, '已经存在')
+            continue
+        response = requests.get(url,headers=headers,proxies=taiyang_proxy())
+        html = etree.HTML((response.content.decode()))
+        category_3_list = html.xpath('//div[@id="classfy-sub"]/a')
+        for category_3 in category_3_list[1:]:
+            title = category_3.xpath('./span/text()')[0]
+            cate_id = category_3.xpath('./@href')[0].split('/')[-1]
+            with open('../category/'+filename,'a',encoding='utf-8') as f:
+                f.write(cate_id + '$' + title + '\n')
+                print(cate_id + '$' + title + '\n')
+        if filename not in [i for i in os.listdir('../category')]:
+            with open('../category/'+filename,'w',encoding='utf-8') as f:
+                f.write('')
+        sleep(random.uniform(2,4))
+
+def region():
+    path = '../region/'
+    html = etree.HTML(text)
+    urls = html.xpath('//div[@id="region-nav"]/a/@href')
+    titles_1 = html.xpath('//div[@id="region-nav"]/a/span/text()')
+    for ind,url in enumerate(urls):
+        print(url)
+        filename = url.split('/')[-1] + '$' + titles_1[ind] + '.txt'
+        filenames = [i for i in os.listdir(path)]
+        if filename in filenames:
+            print(filename, '已经存在')
+            continue
+        response = requests.get(url, headers=headers, proxies=taiyang_proxy())
+        html = etree.HTML((response.content.decode()))
+        category_3_list = html.xpath('//div[@id="region-nav-sub"]/a')
+        for category_3 in category_3_list[1:]:
+            title = category_3.xpath('./span/text()')[0]
+            cate_id = 'r' + category_3.xpath('./@data-cat-id')[0]
+            with open(path + filename, 'a', encoding='utf-8') as f:
+                f.write(cate_id + '$' + title + '\n')
+                print(cate_id + '$' + title + '\n')
+        if filename not in [i for i in os.listdir(path)]:
+            with open(path + filename, 'w', encoding='utf-8') as f:
+                f.write('')
+        sleep(random.uniform(2, 4))
+region()

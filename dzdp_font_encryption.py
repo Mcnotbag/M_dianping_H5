@@ -11,7 +11,7 @@ import numpy
 import os
 from woff2tff import woff_to_ttf
 
-tessdata_dir_config = '--tessdata-dir "c://Program Files (x86)//Tesseract-OCR//tessdata"'
+# tessdata_dir_config = '--tessdata-dir "c://Program Files (x86)//Tesseract-OCR//tessdata"'
 
 class DaZhongDianPing():
     def __init__(self):
@@ -243,7 +243,7 @@ class DaZhongDianPing():
         self.get_shop_info()
 
     def work(self):
-
+        pass
 
 if __name__ == '__main__':
     dz = DaZhongDianPing()
