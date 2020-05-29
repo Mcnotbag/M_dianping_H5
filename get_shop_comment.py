@@ -1,13 +1,28 @@
 #coding:utf-8
+import hashlib
+from datetime import datetime
+from pprint import pprint
+
+import psycopg2
 import requests
 import re
 import time
 from lxml import etree
 import random
+from tools.proxy import taiyang_proxy
+# 线上
+# conn = psycopg2.connect(database="crawler", user="root", password="9TTjkHY^Y#UeLORZ", host="10.101.0.90", port="8635")
+# 本地
+conn = psycopg2.connect(database="mt_wm_test", user="postgres", password="postgres", host="localhost", port="8635")
 
-class DaZhongDianPing():
-    def __init__(self):
-        self.url = "http://www.dianping.com/shop/k9H9LPBySg7envDa/review_all"
+cur = conn.cursor()
+
+class Shop_Comment():
+    def __init__(self,shop_url,proxy):
+        self.proxy = proxy
+        self.kwargs = {}
+        self.comm_kwargs = {}
+        self.url = shop_url
         # 页面 html
         self.html = None
         # 页面字体大小
@@ -41,14 +56,14 @@ class DaZhongDianPing():
             'Accept-Language': 'zh-CN,zh;q=0.9',
             'Cookie': ''
         }
-
-    def get_max_pages(self):
-        tree = etree.HTML(self.html)
-        self.max_pages = int(tree.xpath('//div[@class="reviews-pages"]/a/text()')[-2])
+    # 目前不用
+    # def get_max_pages(self):
+    #     tree = etree.HTML(self.html)
+    #     self.max_pages = int(tree.xpath('//div[@class="reviews-pages"]/a/text()')[-2])
 
     def get_svg_html(self):
         # 获取商家评论页内容
-        index_res = requests.get(self.url, headers=self.headers, timeout=self.timeout)
+        index_res = requests.get(self.url, headers=self.headers, proxies=self.proxy,timeout=self.timeout,verify=False)
         self.html = index_res.text
 
         # 正则匹配 css 文件
@@ -89,13 +104,17 @@ class DaZhongDianPing():
         # xxx 每天都会发生变化，所以动态匹配对应的前缀
 
         result = re.search('<bb class="(.*?)"></bb>', self.html, re.S)
-        address_prefix = result.group(1)[:2]
+        # address_prefix = result.group(1)[:2]
 
         result = re.search('<cc class="(.*?)"></cc>', self.html, re.S)
-        tell_prefix = result.group(1)[:2]
+        # tell_prefix = result.group(1)[:2]
 
         result = re.search('<svgmtsi class="(.*?)"></svgmtsi>', self.html, re.S)
-        review_prefix = result.group(1)[:2]
+        try:
+            review_prefix = result.group(1)[:2]
+        except:
+            print('关注下这个页面，没有数据',self.url)
+            return False
 
 
         """
@@ -110,9 +129,9 @@ class DaZhongDianPing():
         """
 
         # 地址css标签
-        address_class_list = re.findall('\.%s(.*?){background:(.*?)px (.*?)px;}' % address_prefix, self.css, re.S)
+        # address_class_list = re.findall('\.%s(.*?){background:(.*?)px (.*?)px;}' % address_prefix, self.css, re.S)
         # 电话css标签
-        tell_class_list = re.findall('\.%s(.*?){background:(.*?)px (.*?)px;}' % tell_prefix, self.css, re.S)
+        # tell_class_list = re.findall('\.%s(.*?){background:(.*?)px (.*?)px;}' % tell_prefix, self.css, re.S)
         # 评论css标签
         review_class_list = re.findall('\.%s(.*?){background:(.*?)px (.*?)px;}' % review_prefix, self.css, re.S)
 
@@ -141,6 +160,7 @@ class DaZhongDianPing():
         # print(self.address_font_map)
         print(self.review_font_map)
         # print(self.tell_font_map)
+        return True
 
     def review_class_to_font(self, class_list, y_words, prefix):
         tmp_dc = dict()
@@ -198,13 +218,14 @@ class DaZhongDianPing():
         #
         # print(f'地址：{shop_address}\n电话：{shop_tell}')
         tree = etree.HTML(self.html)
-        comment_cnt = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='reviews']/text()"))
-        avg_speed = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='price']/text()"))
-        pro_score = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[1]/text()"))
-        env_score = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[2]/text()"))
-        ser_score = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[3]/text()"))
-        kwargs = {}
-        print(comment_cnt,avg_speed,pro_score,env_score,ser_score)
+        self.comm_kwargs['shopname'] = ''.join(tree.xpath('//div[@class="review-shop-wrap"]/div[@class="shop-info clearfix"]/h1[@class="shop-name"]/text()')).replace("'","’")
+        self.kwargs['comment_cnt'] = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='reviews']/text()"))
+        # avg_speed = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='price']/text()"))
+        self.kwargs['pro_score'] = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[1]/text()"))
+        self.kwargs['env_score'] = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[2]/text()"))
+        self.kwargs['ser_score'] = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[3]/text()"))
+
+        self.kwargs['comment_tags'] = ';'.join(tree.xpath('//div[@class="reviews-tags"]/div[@class="content"]/span/a/@date-type'))
 
     def get_user_info(self):
         # 将 self.html 评论区域加密的 class 样式替换成对应的中文字符
@@ -214,26 +235,62 @@ class DaZhongDianPing():
                                self.html)
 
         xhtml = etree.HTML(self.html)
-        # 获取用户昵称
-        user_name = xhtml.xpath('//div[@class="reviews-items"]/ul/li/div/div[1]/a/text()')
-        user_name = [i.strip() for i in user_name]
+        comm_li = xhtml.xpath('//div[@class="reviews-items"]/ul/li/div[@class="main-review"]')
+        for comm in comm_li:
+            # 获取用户昵称
+            self.comm_kwargs['user_name'] = ''.join(comm.xpath('./div[@class="dper-info"]/a/text()')).replace('\n','').replace(' ','')
+            # 用户等级
+            self.comm_kwargs['user_level'] = ''.join(comm.xpath('./div[@class="dper-info"]/img/@src')).split('/')[-1].replace('square','').replace('.png','')
+            # 是否vip
+            user_vip = comm.xpath('./div[@class="dper-info"]/span[@class="vip"]')
+            if user_vip == []:
+                self.comm_kwargs['user_vip'] = 0
+            else:
+                self.comm_kwargs['user_vip'] = 1
+            # 评分
+            self.comm_kwargs['shop_score'] = float(''.join(comm.xpath('./div[@class="review-rank"]/span[1]/@class')).replace('sml-rank-stars sml-str','').replace(' star',''))
+            self.comm_kwargs['pro_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[1]/text()')).replace('\n','').replace(' ','').replace('口味：','')
+            self.comm_kwargs['env_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[2]/text()')).replace('\n','').replace(' ','').replace('环境：','')
+            self.comm_kwargs['ser_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[3]/text()')).replace('\n','').replace(' ','').replace('服务：','')
 
-        # 获取用户评论
-        user_review = xhtml.xpath('//div[@class="review-words Hide"]')
-        review_list = [i.xpath('string(.)').replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '') for
-                       i in user_review]
-        for i in review_list:
-            print(i)
-            print('-------------------------------------')
+            # 获取用户评论
+            self.comm_kwargs['comment'] = ''.join(comm.xpath('./div[@class="review-words Hide"]/text()')).replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '').replace("'",'’')
+            # review_list = [i.xpath('string(.)').replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '') for
+            #                i in user_review]
+            # 评论时间
+            self.comm_kwargs['com_date'] =''.join(comm.xpath('div[@class="misc-info clearfix"]/span[@class="time"]/text()')).replace('\n','').strip()
+            if '更新' in self.comm_kwargs['com_date']:
+                self.comm_kwargs['com_date'] = self.comm_kwargs['com_date'].split('更新于')[-1]
+            self.comm_kwargs['url'] = self.url
+            self.comm_kwargs['create_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.comm_kwargs['shopid'] = self.referer.split('/')[-1]
+            # id user_name + $ + com_date
+            hash_str = self.comm_kwargs['user_name'] + '$' + self.comm_kwargs['com_date']
+            self.comm_kwargs['id'] = hashlib.md5(hash_str.encode('utf-8')).hexdigest()
+            self.insert_comment(**self.comm_kwargs)
 
+    def insert_comment(self,**kwargs):
+        sql = """
+        insert into dianping_comment values ('%(id)s','%(shopid)s','%(shopname)s','%(comment)s','%(url)s','%(user_name)s','%(user_level)s','%(user_vip)s','%(pro_score)s',
+        '%(env_score)s','%(ser_score)s','%(com_date)s','%(create_time)s','%(shop_score)s')
+        """ % kwargs
+        try:
+            cur.execute(sql)
+            conn.commit()
+        except:
+            print('评论已存在',kwargs['id'])
+        # pprint(kwargs)
 
     def run(self):
         self.get_svg_html()
-        self.get_max_pages()
-        self.get_font_map()
-        self.get_shop_info()
-        self.get_user_info()
-
+        # self.get_max_pages()
+        result = self.get_font_map()
+        if result:
+            self.get_shop_info()
+            self.get_user_info()
+            return self.kwargs
+        else:
+            return {}
 if __name__ == '__main__':
-    dz = DaZhongDianPing()
+    dz = Shop_Comment('http://www.dianping.com/shop/k9H9LPBySg7envDa/review_all',taiyang_proxy())
     dz.run()
