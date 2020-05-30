@@ -251,9 +251,14 @@ class Shop_Comment():
             comm_kwargs['ser_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[3]/text()')).replace('\n','').replace(' ','').replace('服务：','')
 
             # 获取用户评论
-            comm_kwargs['comment'] = ''.join(comm.xpath('./div[@class="review-words Hide"]/text()')).replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '').replace("'",'’')
+            # comm_kwargs['comment'] = ''.join(comm.xpath('./div[@class="review-words Hide"]/text()')).replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '').replace("'",'’')
             # review_list = [i.xpath('string(.)').replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '') for
             #                i in user_review]
+            comments = comm.xpath('./div[@class="review-words Hide"]')[0]
+
+            comm_kwargs['comment'] = comments.xpath('string(.)').replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '').replace('\t','')
+
+            print(comments['comment'])
             # 评论时间
             comm_kwargs['com_date'] =''.join(comm.xpath('div[@class="misc-info clearfix"]/span[@class="time"]/text()')).replace('\n','').strip()
             if '更新' in comm_kwargs['com_date']:

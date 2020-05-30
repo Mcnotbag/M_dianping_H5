@@ -172,6 +172,10 @@ class dp_meishi:
         # 创建时间
         kwargs['create_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+        # 评论标签
+        if 'comment_tags' not in kwargs.keys():
+            kwargs['comment_tags'] = ''
+
         return kwargs
 
     def insert_comment(self,comment_list):
@@ -214,7 +218,7 @@ if __name__ == '__main__':
         args = redis_cli.spop(redis_name)
         print(args)
         meishi = dp_meishi(args,proxy)
-        try:
-            meishi.run()
-        except:
-            redis_cli.sadd(redis_name,args)
+
+        meishi.run()
+
+        redis_cli.sadd(redis_name,args)
