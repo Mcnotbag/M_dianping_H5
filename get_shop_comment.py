@@ -10,18 +10,12 @@ import time
 from lxml import etree
 import random
 from tools.proxy import taiyang_proxy
-# 线上
-# conn = psycopg2.connect(database="crawler", user="root", password="9TTjkHY^Y#UeLORZ", host="10.101.0.90", port="8635")
-# 本地
-conn = psycopg2.connect(database="mt_wm_test", user="postgres", password="postgres", host="localhost", port="8635")
-
-cur = conn.cursor()
 
 class Shop_Comment():
     def __init__(self,shop_url,proxy):
         self.proxy = proxy
         self.kwargs = {}
-        self.comm_kwargs = {}
+        self.comment_list = []
         self.url = shop_url
         # 页面 html
         self.html = None
@@ -218,7 +212,7 @@ class Shop_Comment():
         #
         # print(f'地址：{shop_address}\n电话：{shop_tell}')
         tree = etree.HTML(self.html)
-        self.comm_kwargs['shopname'] = ''.join(tree.xpath('//div[@class="review-shop-wrap"]/div[@class="shop-info clearfix"]/h1[@class="shop-name"]/text()')).replace("'","’")
+        # comm_kwargs['shopname'] = ''.join(tree.xpath('//div[@class="review-shop-wrap"]/div[@class="shop-info clearfix"]/h1[@class="shop-name"]/text()')).replace("'","’")
         self.kwargs['comment_cnt'] = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='reviews']/text()"))
         # avg_speed = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='price']/text()"))
         self.kwargs['pro_score'] = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[1]/text()"))
@@ -237,49 +231,40 @@ class Shop_Comment():
         xhtml = etree.HTML(self.html)
         comm_li = xhtml.xpath('//div[@class="reviews-items"]/ul/li/div[@class="main-review"]')
         for comm in comm_li:
+            comm_kwargs = {}
             # 获取用户昵称
-            self.comm_kwargs['user_name'] = ''.join(comm.xpath('./div[@class="dper-info"]/a/text()')).replace('\n','').replace(' ','')
+            comm_kwargs['user_name'] = ''.join(comm.xpath('./div[@class="dper-info"]/a/text()')).replace('\n','').replace(' ','')
             # 用户等级
-            self.comm_kwargs['user_level'] = ''.join(comm.xpath('./div[@class="dper-info"]/img/@src')).split('/')[-1].replace('square','').replace('.png','')
+            comm_kwargs['user_level'] = ''.join(comm.xpath('./div[@class="dper-info"]/img/@src')).split('/')[-1].replace('square','').replace('.png','')
             # 是否vip
             user_vip = comm.xpath('./div[@class="dper-info"]/span[@class="vip"]')
             if user_vip == []:
-                self.comm_kwargs['user_vip'] = 0
+                comm_kwargs['user_vip'] = 0
             else:
-                self.comm_kwargs['user_vip'] = 1
+                comm_kwargs['user_vip'] = 1
+            # 店名
+            comm_kwargs['shopname'] = ''.join(xhtml.xpath('//div[@class="review-shop-wrap"]/div[@class="shop-info clearfix"]/h1[@class="shop-name"]/text()')).replace("'", "’")
             # 评分
-            self.comm_kwargs['shop_score'] = float(''.join(comm.xpath('./div[@class="review-rank"]/span[1]/@class')).replace('sml-rank-stars sml-str','').replace(' star',''))
-            self.comm_kwargs['pro_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[1]/text()')).replace('\n','').replace(' ','').replace('口味：','')
-            self.comm_kwargs['env_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[2]/text()')).replace('\n','').replace(' ','').replace('环境：','')
-            self.comm_kwargs['ser_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[3]/text()')).replace('\n','').replace(' ','').replace('服务：','')
+            comm_kwargs['shop_score'] = float(''.join(comm.xpath('./div[@class="review-rank"]/span[1]/@class')).replace('sml-rank-stars sml-str','').replace(' star',''))
+            comm_kwargs['pro_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[1]/text()')).replace('\n','').replace(' ','').replace('口味：','')
+            comm_kwargs['env_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[2]/text()')).replace('\n','').replace(' ','').replace('环境：','')
+            comm_kwargs['ser_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[3]/text()')).replace('\n','').replace(' ','').replace('服务：','')
 
             # 获取用户评论
-            self.comm_kwargs['comment'] = ''.join(comm.xpath('./div[@class="review-words Hide"]/text()')).replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '').replace("'",'’')
+            comm_kwargs['comment'] = ''.join(comm.xpath('./div[@class="review-words Hide"]/text()')).replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '').replace("'",'’')
             # review_list = [i.xpath('string(.)').replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '') for
             #                i in user_review]
             # 评论时间
-            self.comm_kwargs['com_date'] =''.join(comm.xpath('div[@class="misc-info clearfix"]/span[@class="time"]/text()')).replace('\n','').strip()
-            if '更新' in self.comm_kwargs['com_date']:
-                self.comm_kwargs['com_date'] = self.comm_kwargs['com_date'].split('更新于')[-1]
-            self.comm_kwargs['url'] = self.url
-            self.comm_kwargs['create_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self.comm_kwargs['shopid'] = self.referer.split('/')[-1]
+            comm_kwargs['com_date'] =''.join(comm.xpath('div[@class="misc-info clearfix"]/span[@class="time"]/text()')).replace('\n','').strip()
+            if '更新' in comm_kwargs['com_date']:
+                comm_kwargs['com_date'] = comm_kwargs['com_date'].split('更新于')[-1]
+            comm_kwargs['url'] = self.url
+            comm_kwargs['create_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            comm_kwargs['shopid'] = self.referer.split('/')[-1]
             # id user_name + $ + com_date
-            hash_str = self.comm_kwargs['user_name'] + '$' + self.comm_kwargs['com_date']
-            self.comm_kwargs['id'] = hashlib.md5(hash_str.encode('utf-8')).hexdigest()
-            self.insert_comment(**self.comm_kwargs)
-
-    def insert_comment(self,**kwargs):
-        sql = """
-        insert into dianping_comment values ('%(id)s','%(shopid)s','%(shopname)s','%(comment)s','%(url)s','%(user_name)s','%(user_level)s','%(user_vip)s','%(pro_score)s',
-        '%(env_score)s','%(ser_score)s','%(com_date)s','%(create_time)s','%(shop_score)s')
-        """ % kwargs
-        try:
-            cur.execute(sql)
-            conn.commit()
-        except:
-            print('评论已存在',kwargs['id'])
-        # pprint(kwargs)
+            hash_str = comm_kwargs['user_name'] + '$' + comm_kwargs['com_date']
+            comm_kwargs['id'] = hashlib.md5(hash_str.encode('utf-8')).hexdigest()
+            self.comment_list.append(comm_kwargs)
 
     def run(self):
         self.get_svg_html()
@@ -288,9 +273,9 @@ class Shop_Comment():
         if result:
             self.get_shop_info()
             self.get_user_info()
-            return self.kwargs
+            return self.kwargs,self.comment_list
         else:
-            return {}
+            return {},{}
 if __name__ == '__main__':
     dz = Shop_Comment('http://www.dianping.com/shop/k9H9LPBySg7envDa/review_all',taiyang_proxy())
     dz.run()
