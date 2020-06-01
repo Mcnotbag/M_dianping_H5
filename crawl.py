@@ -27,7 +27,7 @@ cur = conn.cursor()
 # 线上
 redis_cli = Redis(host='10.101.0.239',password='abc123',decode_responses=True)
 redis_name = 'dp_ch10'
-# proxy = taiyang_proxy()
+proxy = taiyang_proxy()
 # proxy = {'http': 'http://182.84.112.52:4317', 'https': 'https://182.84.112.52:4317'}
 
 def enpytro():
@@ -41,7 +41,7 @@ def get_hc_v():
 
 class dp_meishi:
     def __init__(self,dp_args):
-        self.proxy = taiyang_proxy()
+        self.proxy = proxy
         self.g_id = None
         self.r_id = None
         self.page = 1
@@ -117,6 +117,7 @@ class dp_meishi:
                     self.insert_shop_info(**kwargs)
                     self.insert_comment(comm_kwargs_list)
             else:
+                print('code 不是200：--------',json_resp['code'])
                 print(response.content.decode())
                 self.proxy = taiyang_proxy()
                 redis_cli.sadd(redis_name,self.args)
