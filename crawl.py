@@ -193,7 +193,7 @@ class dp_meishi:
                 # print('评论已存在',comment['id'],'店名:',comment['shopname'])
                 pass
         conn.commit()
-        print('评论插入成功：', comment_list[0]['shopname'])
+        print('评论插入成功：')
 
     def insert_shop_info(self,**kwargs):
         sql = """
@@ -229,4 +229,4 @@ if __name__ == '__main__':
     for i in range(4):
         t = threading.Thread(target=work)
         t.start()
-        sleep(2)
+        sleep(4)
