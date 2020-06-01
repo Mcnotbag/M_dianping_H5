@@ -6,9 +6,9 @@ from time import sleep
 import requests
 from lxml import etree
 from tools.proxy import taiyang_proxy
-with open('../ch10_list.html','r',encoding='utf-8') as f:
-    text = f.read()
-
+# with open('../ch10_list.html','r',encoding='utf-8') as f:
+#     text = f.read()
+proxy = taiyang_proxy()
 headers = {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
             'Accept-Encoding': 'gzip, deflate',
@@ -16,10 +16,15 @@ headers = {
             'Cache-Control': 'max-age=0',
             'Connection': 'keep-alive',
             'Host': 'www.dianping.com',
-            'Referer': 'http://www.dianping.com/shenzhen/ch10',
+            'Referer': 'http://www.dianping.com/guangzhou',
             'Upgrade-Insecure-Requests': '1',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
         }
+url = 'http://www.dianping.com/guangzhou/ch10'
+
+resp = requests.get(url=url,headers=headers)
+text = resp.content.decode()
+print(text)
 def category():
     html = etree.HTML(text)
     urls = html.xpath('//div[@id="classfy"]/a/@href')
@@ -31,7 +36,7 @@ def category():
         if filename in filenames:
             print(filename, '已经存在')
             continue
-        response = requests.get(url,headers=headers,proxies=taiyang_proxy())
+        response = requests.get(url,headers=headers)
         html = etree.HTML((response.content.decode()))
         category_3_list = html.xpath('//div[@id="classfy-sub"]/a')
         for category_3 in category_3_list[1:]:
@@ -46,7 +51,7 @@ def category():
         sleep(random.uniform(2,4))
 
 def region():
-    path = '../region/'
+    path = '../region/广州/'
     html = etree.HTML(text)
     urls = html.xpath('//div[@id="region-nav"]/a/@href')
     titles_1 = html.xpath('//div[@id="region-nav"]/a/span/text()')
@@ -57,7 +62,7 @@ def region():
         if filename in filenames:
             print(filename, '已经存在')
             continue
-        response = requests.get(url, headers=headers, proxies=taiyang_proxy())
+        response = requests.get(url, headers=headers)
         html = etree.HTML((response.content.decode()))
         category_3_list = html.xpath('//div[@id="region-nav-sub"]/a')
         for category_3 in category_3_list[1:]:

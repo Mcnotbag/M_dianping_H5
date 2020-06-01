@@ -84,7 +84,7 @@ class dp_meishi:
     def get_list(self,page,kwargs):
         self.headers['Referer'] = 'http://www.dianping.com/search/map/category/7/10/' + self.g_id
         self.data['categoryId'] = self.g_id.replace('g', '')
-        self.data['regionId'] = self.r_id.replace('r','')
+        self.data['regionId'] = self.r_id.replace('r','').replace('c','')
         self.data['page'] = str(page)
         print('当前IP：',self.proxy)
         try:
