@@ -91,7 +91,7 @@ class dp_meishi:
             response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=self.proxy,verify=False,timeout=8)
         except:
             self.proxy = taiyang_proxy()
-            response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=self.proxy,verify=False)
+            response = requests.post(self.list_url, headers=self.headers, data=self.data,verify=False)
         # print(response.content.decode())
         if response.status_code == 200:
             json_resp = json.loads(response.content.decode())
@@ -184,7 +184,7 @@ class dp_meishi:
     def insert_comment(self,comment_list):
         for comment in comment_list:
             sql = """
-            insert into dianping_comment values ('%(id)s','%(shopid)s','%(shopname)s','%(comment)s','%(url)s','%(user_name)s','%(user_level)s','%(user_vip)s','%(pro_score)s',
+            insert into dianping_beauty.dianping_comment values ('%(id)s','%(shopid)s','%(shopname)s','%(comment)s','%(url)s','%(user_name)s','%(user_level)s','%(user_vip)s','%(pro_score)s',
             '%(env_score)s','%(ser_score)s','%(com_date)s','%(create_time)s','%(shop_score)s')
             """ % comment
             try:
@@ -197,7 +197,7 @@ class dp_meishi:
 
     def insert_shop_info(self,**kwargs):
         sql = """
-            insert into dianping_shop values (
+            insert into dianping_beauty.dianping_shop values (
             '%(source_data)s','%(id)s','%(shopname)s','%(shopid)s','%(url)s','%(address)s','%(city)s','%(district)s','%(region)s','%(address_gps_lat)s',
             '%(address_gps_lng)s','%(category_tags_l1_name)s','%(category_tags_l2_name)s','%(category_tags_l3_name)s','%(star_score)s','%(shop_score)s',
             '%(pro_score)s','%(env_score)s','%(ser_score)s','%(avg_spend)s','%(comment_cnt)s','%(comment_tags)s','%(create_time)s'
