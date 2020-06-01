@@ -229,3 +229,4 @@ if __name__ == '__main__':
     for i in range(4):
         t = threading.Thread(target=work)
         t.start()
+        sleep(2)
