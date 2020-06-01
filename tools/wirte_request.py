@@ -2,7 +2,8 @@ import os
 from redis import Redis
 
 
-redis_cli = Redis(decode_responses=True)
+# 线上
+redis_cli = Redis(host='10.101.0.239',password='abc123',decode_responses=True)
 redis_name = 'dp_ch10'
 def wirte_redis_request():
     cate_path = '../category/'
@@ -19,16 +20,17 @@ def wirte_redis_request():
                 category_3_id = category_3.split('$')[0]
                 # category_3_id = '210'
                 category_3_title = category_3.split('$')[0]
-                put_str = filename.replace('.txt','') + ';' + category_3 + ';' + 'r31$南山区'
-                print(put_str)
-                redis_cli.sadd(redis_name,put_str)
-                with open(region_path + 'r31$南山区.txt','r',encoding='utf-8') as f:
-                    region_list = f.read().split('\n')
-                    for region_str in region_list:
-                        if region_str == '':
-                            continue
-                        put_str = filename.replace('.txt','') + ';' + category_3 + ';' + 'r31$南山区' + ';' + region_str
-                        print(put_str)
-                        redis_cli.sadd(redis_name,put_str)
+                for r in os.listdir(region_path):
+                    put_str = filename.replace('.txt', '') + ';' + category_3 + ';' + r.replace('.txt','')
+                    print(put_str)
+                    redis_cli.sadd(redis_name,put_str)
+                    with open(region_path + r,'r',encoding='utf-8') as f:
+                        region_list = f.read().split('\n')
+                        for region_str in region_list:
+                            if region_str == '':
+                                continue
+                            put_str = filename.replace('.txt','') + ';' + category_3 + ';' + r.replace('.txt','') + ';' + region_str
+                            print(put_str)
+                            redis_cli.sadd(redis_name,put_str)
 
 wirte_redis_request()

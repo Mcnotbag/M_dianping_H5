@@ -57,7 +57,7 @@ class Shop_Comment():
 
     def get_svg_html(self):
         # 获取商家评论页内容
-        index_res = requests.get(self.url, headers=self.headers, proxies=self.proxy,timeout=self.timeout,verify=False)
+        index_res = requests.get(self.url, headers=self.headers,timeout=self.timeout,verify=False)
         self.html = index_res.text
 
         # 正则匹配 css 文件
@@ -68,7 +68,7 @@ class Shop_Comment():
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36'
             }
             css_res = requests.get(css_url, headers=headers)
-            print(f'css_url:{css_url}')
+            # print(f'css_url:{css_url}')
             self.css = css_res.text
 
             # 正则匹配商家地址使用的 svg 文件 url
@@ -86,10 +86,10 @@ class Shop_Comment():
             """
             # 正则匹配评论使用的 svg 文件 url
             result = re.search('svgmtsi\[class.*?background-image: url\((.*?)\);', self.css, re.S)
-            print(result)
+            # print(result)
             review_svg_url = 'http:' + result.group(1)
             self.review_svg = requests.get(review_svg_url, headers=headers).text
-            print(review_svg_url)
+            # print(review_svg_url)
 
     def get_font_map(self):
         # <bb class="xxx.*?"></bb>              地址
@@ -152,7 +152,7 @@ class Shop_Comment():
         # self.address_font_map = self.address_class_to_font(address_class_list, address_svg_y_list, address_words_dc, address_prefix)
         # self.tell_font_map = self.tell_class_to_num(tell_class_list, tell_x_list, tell_words_str, tell_prefix)
         # print(self.address_font_map)
-        print(self.review_font_map)
+        # print(self.review_font_map)
         # print(self.tell_font_map)
         return True
 
@@ -245,7 +245,10 @@ class Shop_Comment():
             # 店名
             comm_kwargs['shopname'] = ''.join(xhtml.xpath('//div[@class="review-shop-wrap"]/div[@class="shop-info clearfix"]/h1[@class="shop-name"]/text()')).replace("'", "’")
             # 评分
-            comm_kwargs['shop_score'] = float(''.join(comm.xpath('./div[@class="review-rank"]/span[1]/@class')).replace('sml-rank-stars sml-str','').replace(' star',''))
+            try:
+                comm_kwargs['shop_score'] = float(''.join(comm.xpath('./div[@class="review-rank"]/span[1]/@class')).replace('sml-rank-stars sml-str','').replace(' star',''))
+            except Exception as ValueError:
+                comm_kwargs['shop_score'] = 0
             comm_kwargs['pro_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[1]/text()')).replace('\n','').replace(' ','').replace('口味：','')
             comm_kwargs['env_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[2]/text()')).replace('\n','').replace(' ','').replace('环境：','')
             comm_kwargs['ser_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[3]/text()')).replace('\n','').replace(' ','').replace('服务：','')
@@ -254,11 +257,11 @@ class Shop_Comment():
             # comm_kwargs['comment'] = ''.join(comm.xpath('./div[@class="review-words Hide"]/text()')).replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '').replace("'",'’')
             # review_list = [i.xpath('string(.)').replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '') for
             #                i in user_review]
-            comments = comm.xpath('./div[@class="review-words Hide"]')[0]
+            comments = comm.xpath('./div[@class="review-words Hide"]')[0] if comm.xpath('./div[@class="review-words Hide"]') != [] else comm.xpath('.//div[@class="review-words"]')[0]
 
             comm_kwargs['comment'] = comments.xpath('string(.)').replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '').replace('\t','')
 
-            print(comments['comment'])
+            # print(comments['comment'])
             # 评论时间
             comm_kwargs['com_date'] =''.join(comm.xpath('div[@class="misc-info clearfix"]/span[@class="time"]/text()')).replace('\n','').strip()
             if '更新' in comm_kwargs['com_date']:

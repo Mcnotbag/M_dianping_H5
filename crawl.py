@@ -3,6 +3,7 @@ import hashlib
 import json
 import os
 import random
+import threading
 from datetime import datetime
 from pprint import pprint
 from time import sleep, time
@@ -16,15 +17,17 @@ from get_shop_comment import Shop_Comment
 from fake_useragent import UserAgent
 ua = UserAgent(path='tools/ua.json')
 # 线上
-# conn = psycopg2.connect(database="crawler", user="root", password="9TTjkHY^Y#UeLORZ", host="10.101.0.90", port="8635")
+conn = psycopg2.connect(database="crawler", user="root", password="9TTjkHY^Y#UeLORZ", host="10.101.0.90", port="8635")
 # 本地
-conn = psycopg2.connect(database="mt_wm_test", user="postgres", password="postgres", host="localhost", port="8635")
+# conn = psycopg2.connect(database="mt_wm_test", user="postgres", password="postgres", host="localhost", port="8635")
 
 cur = conn.cursor()
 # 本地
-redis_cli = Redis(decode_responses=True)
+# redis_cli = Redis(decode_responses=True)
+# 线上
+redis_cli = Redis(host='10.101.0.239',password='abc123',decode_responses=True)
 redis_name = 'dp_ch10'
-proxy = taiyang_proxy()
+# proxy = taiyang_proxy()
 # proxy = {'http': 'http://182.84.112.52:4317', 'https': 'https://182.84.112.52:4317'}
 
 def enpytro():
@@ -37,8 +40,8 @@ def get_hc_v():
 
 
 class dp_meishi:
-    def __init__(self,dp_args,proxy):
-        self.proxy = proxy
+    def __init__(self,dp_args):
+        self.proxy = taiyang_proxy()
         self.g_id = None
         self.r_id = None
         self.page = 1
@@ -89,7 +92,7 @@ class dp_meishi:
         except:
             self.proxy = taiyang_proxy()
             response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=self.proxy,verify=False)
-        print(response.content.decode())
+        # print(response.content.decode())
         if response.status_code == 200:
             json_resp = json.loads(response.content.decode())
             if json_resp['code'] == 200:
@@ -104,7 +107,7 @@ class dp_meishi:
                     kwargs['address_gps_lat'] = shop['geoLat']
                     kwargs['address'] = shop['address']
                     kwargs['avg_spend'] = shop['avgPrice']
-                    sleep(random.uniform(0.2,0.5))
+                    # sleep(random.uniform(0.2,0.5))
                     # print(kwargs['url']+ '/review_all')
 
                     detail_obj = Shop_Comment(kwargs['url']+ '/review_all',proxy=self.proxy)
@@ -114,7 +117,7 @@ class dp_meishi:
                     self.insert_shop_info(**kwargs)
                     self.insert_comment(comm_kwargs_list)
             else:
-
+                print(response.content.decode())
                 self.proxy = taiyang_proxy()
                 redis_cli.sadd(redis_name,self.args)
 
@@ -187,8 +190,10 @@ class dp_meishi:
             try:
                 cur.execute(sql)
             except:
-                print('评论已存在',comment['id'],'店名:',comment['shopname'])
+                # print('评论已存在',comment['id'],'店名:',comment['shopname'])
+                pass
         conn.commit()
+        print('评论插入成功：', comment_list[0]['shopname'])
 
     def insert_shop_info(self,**kwargs):
         sql = """
@@ -201,9 +206,10 @@ class dp_meishi:
         try:
             cur.execute(sql)
             conn.commit()
-            pprint(kwargs)
+            # pprint(kwargs)
+            print('插入成功:',kwargs['id'],kwargs['shopname'])
         except Exception as e:
-            print(e)
+            # print(e)
             print('店铺已经存在:',kwargs['id'],kwargs['shopname'])
     def run(self):
         kwargs = self.pre_args_str()
@@ -214,11 +220,12 @@ class dp_meishi:
                 print('当前页数---',page)
                 self.get_list(page,kwargs)
 if __name__ == '__main__':
-    while True:
-        args = redis_cli.spop(redis_name)
-        print(args)
-        meishi = dp_meishi(args,proxy)
-
-        meishi.run()
-
-        redis_cli.sadd(redis_name,args)
+    def work():
+        while True:
+            args = redis_cli.spop(redis_name)
+            print(args)
+            meishi = dp_meishi(args)
+            meishi.run()
+    for i in range(4):
+        t = threading.Thread(target=work)
+        t.start()
