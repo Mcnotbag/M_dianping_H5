@@ -209,7 +209,7 @@ class dp_meishi:
             # pprint(kwargs)
             print('插入成功:',kwargs['id'],kwargs['shopname'])
         except Exception as e:
-            # print(e)
+            print(e)
             print('店铺已经存在:',kwargs['id'],kwargs['shopname'])
     def run(self):
         kwargs = self.pre_args_str()
