@@ -7,7 +7,7 @@ redis_cli = Redis(host='10.101.0.239',password='abc123',decode_responses=True)
 redis_name = 'dp_ch10'
 def wirte_redis_request():
     cate_path = '../category/'
-    region_path = '../region/'
+    region_path = '../region/广州/'
     filenames = os.listdir(cate_path)
     for filename in filenames:
         category_2_id = filename.replace('.txt','').split('$')[0]
