@@ -114,7 +114,7 @@ class dp_meishi:
                     self.insert_comment(comm_kwargs_list)
             else:
                 print('code 不是200：--------',json_resp['code'])
-                print(response.content.decode())
+                self.proxy = get_ip()
                 # ip失效
                 get_error()
                 redis_cli.sadd(redis_name,self.args)
