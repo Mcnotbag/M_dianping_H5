@@ -43,7 +43,6 @@ def get_error():
     check_ipNum()
 
 def get_ip():
-    check_ipNum()
     return redis_cli.spop(redis_IP_name)
 
 def taiyang_proxy():
