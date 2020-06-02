@@ -88,10 +88,13 @@ class dp_meishi:
         self.data['regionId'] = self.r_id.replace('r','').replace('c','')
         self.data['page'] = str(page)
         try:
-            response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=self.pre_proxy(self.proxy),verify=False,timeout=8)
+            proxies = self.pre_proxy(self.proxy)
+            print(proxies)
+            response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=proxies,verify=False,timeout=8)
         except:
             self.proxy = get_ip()
-            response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=self.pre_proxy(self.proxy),verify=False,timeout=8)
+            proxies = self.pre_proxy(self.proxy)
+            response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=proxies,verify=False,timeout=8)
         # print(response.content.decode())
         if response.status_code == 200:
             json_resp = json.loads(response.content.decode())

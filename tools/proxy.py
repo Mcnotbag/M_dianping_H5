@@ -49,12 +49,13 @@ def get_ip():
 
 def taiyang_proxy():
     resp = requests.get('http://http.tiqu.qingjuhe.cn/getip?num=1&type=1&pack=20681&port=11&lb=4&pb=45&regions=')
-
+# "http://http.tiqu.qingjuhe.cn/getip?num=10&type=1&pack=20681&port=1&lb=4&pb=45&regions="
     ip_list = resp.content.decode().split('\n')
     for ip in ip_list:
         if len(ip) > 4:
             continue
         redis_cli.sadd(redis_name,ip)
+        print('添加ip到池:',ip)
 
 if __name__ == '__main__':
     resp = requests.get('http://http.tiqu.qingjuhe.cn/getip?num=1&type=1&pack=20681&port=11&lb=4&pb=45&regions=')
