@@ -85,8 +85,7 @@ class dp_meishi:
             response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=proxies,verify=False,timeout=8)
         except:
             self.proxy = get_ip()
-            proxies = self.pre_proxy(self.proxy)
-            response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=proxies,verify=False,timeout=8)
+            response = requests.post(self.list_url, headers=self.headers, data=self.data,verify=False,timeout=8)
         # print(response.content.decode())
         if response.status_code == 200:
             json_resp = json.loads(response.content.decode())
