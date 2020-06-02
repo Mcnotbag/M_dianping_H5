@@ -224,7 +224,7 @@ class dp_meishi:
                 self.get_list(page,kwargs)
 if __name__ == '__main__':
     def work():
-        while True:
+        while redis_cli.sadd(redis_name):
             args = redis_cli.spop(redis_name)
             print(args)
             meishi = dp_meishi(args)
