@@ -88,7 +88,6 @@ class dp_meishi:
         self.data['categoryId'] = self.g_id.replace('g', '')
         self.data['regionId'] = self.r_id.replace('r','').replace('c','')
         self.data['page'] = str(page)
-        print('当前IP：',self.proxy)
         try:
             response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=self.proxy,verify=False,timeout=8)
         except:
@@ -123,6 +122,7 @@ class dp_meishi:
                 print(response.content.decode())
                 self.proxy = taiyang_proxy()
                 redis_cli.sadd(redis_name,self.args)
+        print('当前IP：', self.proxy)
 
     def pre_args_str(self):
         kwargs = {}
