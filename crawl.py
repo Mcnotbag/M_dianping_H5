@@ -41,6 +41,9 @@ def get_hc_v():
 
 class dp_meishi:
     def __init__(self,dp_args):
+        self.city_name = '广州市'
+        self.city_en_name = 'guangzhou'
+        self.cityId = '4'
         self.proxy = proxy
         self.g_id = None
         self.r_id = None
@@ -64,8 +67,8 @@ class dp_meishi:
         'X-Requested-With': 'XMLHttpRequest',
         }
         self.data = {
-            'cityId': '7',
-            'cityEnName': 'shenzhen',
+            'cityId': self.cityId,
+            'cityEnName': self.city_en_name,
             'promoId': '0',
             'shopType': '10',
             'categoryId': '112',
@@ -79,7 +82,6 @@ class dp_meishi:
             'shippingTypeFilterValue': '0',
             'page': '1',
         }
-        payload = 'cityId=7&cityEnName=shenzhen&promoId=0&shopType=10&categoryId=34224&regionId=28441&sortMode=2&shopSortItem=0&keyword=&searchType=1&branchGroupId=0&aroundShopId=0&shippingTypeFilterValue=0&page=1'
 
     def get_list(self,page,kwargs):
         self.headers['Referer'] = 'http://www.dianping.com/search/map/category/7/10/' + self.g_id
@@ -130,7 +132,7 @@ class dp_meishi:
         kwargs['category_tags_l2_name'] = dp_args.split(';')[0].split('$')[1]
         kwargs['category_tags_l3_name'] = dp_args.split(';')[1].split('$')[1]
         self.g_id = dp_args.split(';')[1].split('$')[0]
-        kwargs['city'] = '深圳市'
+        kwargs['city'] = self.city_name
         kwargs['district'] = dp_args.split(';')[2].split('$')[1]
         if len(dp_args.split(';')) == 3:
             kwargs['region'] = ''
