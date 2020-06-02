@@ -2,11 +2,13 @@
 import os
 import random
 from time import sleep
-from ..setting import *
+
+import psycopg2
 import requests
 from lxml import etree
 # with open('../ch10_list.html','r',encoding='utf-8') as f:
 #     text = f.read()
+conn = psycopg2.connect(database="crawler", user="root", password="9TTjkHY^Y#UeLORZ", host="10.101.0.90", port="8635")
 cur = conn.cursor()
 city_en = 'shanghai'
 city_zh = '上海'
