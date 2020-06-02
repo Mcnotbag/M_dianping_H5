@@ -2,7 +2,7 @@
 import os
 import random
 from time import sleep
-from setting import *
+from ..setting import *
 import requests
 from lxml import etree
 # with open('../ch10_list.html','r',encoding='utf-8') as f:
