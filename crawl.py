@@ -25,7 +25,7 @@ cur = conn.cursor()
 # 本地
 # redis_cli = Redis(decode_responses=True)
 # 线上
-redis_cli = setting['redis-cli']
+redis_cli = setting['redis_cli']
 redis_name = setting['redis_name']
 
 
