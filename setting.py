@@ -15,4 +15,4 @@ setting['conn'] = psycopg2.connect(database="crawler", user="root", password="9T
 setting['redis_cli'] = Redis(host='10.101.0.239',password='abc123',decode_responses=True)
 setting['redis_name'] = 'dp_ch10'
 
-setting['redis_IP'] = 'redis_IPPool'
+setting['redis_IP'] = 'redis_IP'

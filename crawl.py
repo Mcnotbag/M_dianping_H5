@@ -27,7 +27,7 @@ cur = conn.cursor()
 # 线上
 redis_cli = setting['redis_cli']
 redis_name = setting['redis_name']
-
+check_ipNum()
 
 def enpytro():
     s = hex(int(65536 * (1 + random.random())))
@@ -241,7 +241,8 @@ if __name__ == '__main__':
             print(args)
             meishi = dp_meishi(args)
             meishi.run()
-    for i in range(1):
-        t = threading.Thread(target=work)
-        t.start()
-        sleep(4)
+    work()
+    # for i in range(1):
+    #     t = threading.Thread(target=work)
+    #     t.start()
+    #     sleep(4)
