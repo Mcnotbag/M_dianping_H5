@@ -1,7 +1,8 @@
 import requests
+from setting import setting
 
-
-
+redis_cli = setting['redis_cli']
+redis_name = setting['redis_IP']
 
 def abuyun():
     # 要访问的目标页面
@@ -30,16 +31,29 @@ def abuyun():
     }
     return proxies
 
+
+def get_success(proxy):
+    redis_cli.sadd(proxy)
+
+def check_ipNum():
+    count = redis_cli.scard(redis_name)
+    if int(count) < 10:
+        taiyang_proxy()
+
+def get_error():
+    check_ipNum()
+
+def get_ip():
+    return redis_cli.spop(redis_name)
+
 def taiyang_proxy():
-    resp = requests.get('http://http.tiqu.qingjuhe.cn/getip?num=1&type=1&pack=20681&port=11&lb=4&pb=45&regions=')
-    # print(resp.text)
-    if '套餐已用完' in resp.text or '频繁' in resp.text:
-        resp = requests.get('http://http.tiqu.qingjuhe.cn/getip?num=1&type=1&pack=50186&port=1&lb=1&pb=4&regions=')
-    proxy =  {
-        'http':'http://'+resp.text.replace('\n',''),
-        'https':'https://'+resp.text.replace('\n','')
-    }
-    return proxy
+    resp = requests.get('http://http.tiqu.qingjuhe.cn/getip?num=10&type=1&pack=20681&port=11&lb=4&pb=45&regions=')
+
+    ip_list = resp.content.decode().split('\n')
+    for ip in ip_list:
+        if len(ip) > 4:
+            continue
+        redis_cli.sadd(redis_name,ip)
 
 if __name__ == '__main__':
     resp = requests.get('http://http.tiqu.qingjuhe.cn/getip?num=1&type=1&pack=20681&port=11&lb=4&pb=45&regions=')

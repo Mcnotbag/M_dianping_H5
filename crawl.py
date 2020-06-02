@@ -7,17 +7,17 @@ import threading
 from datetime import datetime
 from pprint import pprint
 from time import sleep, time
-
+from setting import setting
 import psycopg2
 import requests
 from redis import Redis
 
-from tools.proxy import taiyang_proxy,abuyun
+from tools.proxy import *
 from get_shop_comment import Shop_Comment
 from fake_useragent import UserAgent
-ua = UserAgent(path='tools/ua.json')
+ua = setting['ua']
 # 线上
-conn = psycopg2.connect(database="crawler", user="root", password="9TTjkHY^Y#UeLORZ", host="10.101.0.90", port="8635")
+conn = setting['conn']
 # 本地
 # conn = psycopg2.connect(database="mt_wm_test", user="postgres", password="postgres", host="localhost", port="8635")
 
@@ -25,10 +25,9 @@ cur = conn.cursor()
 # 本地
 # redis_cli = Redis(decode_responses=True)
 # 线上
-redis_cli = Redis(host='10.101.0.239',password='abc123',decode_responses=True)
-redis_name = 'dp_ch10'
-proxy = taiyang_proxy()
-# proxy = {'http': 'http://182.84.112.52:4317', 'https': 'https://182.84.112.52:4317'}
+redis_cli = setting['redis-cli']
+redis_name = setting['redis_name']
+
 
 def enpytro():
     s = hex(int(65536 * (1 + random.random())))
@@ -44,7 +43,7 @@ class dp_meishi:
         self.city_name = '广州市'
         self.city_en_name = 'guangzhou'
         self.cityId = '4'
-        self.proxy = proxy
+        self.proxy = get_ip()
         self.g_id = None
         self.r_id = None
         self.page = 1
@@ -89,15 +88,16 @@ class dp_meishi:
         self.data['regionId'] = self.r_id.replace('r','').replace('c','')
         self.data['page'] = str(page)
         try:
-            response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=self.proxy,verify=False,timeout=8)
+            response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=self.pre_proxy(self.proxy),verify=False,timeout=8)
         except:
-            sleep(4)
-            response = requests.post(self.list_url, headers=self.headers, data=self.data,verify=False)
-            self.proxy = taiyang_proxy()
+            self.proxy = get_ip()
+            response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=self.pre_proxy(self.proxy),verify=False,timeout=8)
         # print(response.content.decode())
         if response.status_code == 200:
             json_resp = json.loads(response.content.decode())
             if json_resp['code'] == 200:
+                # 将ip添加回ip池
+                get_success(self.proxy)
                 self.page_count = json_resp['pageCount']
                 for shop in json_resp['shopRecordBeanList']:
                     kwargs['shopid'] = shop['shopId']
@@ -112,7 +112,7 @@ class dp_meishi:
                     # sleep(random.uniform(0.2,0.5))
                     # print(kwargs['url']+ '/review_all')
 
-                    detail_obj = Shop_Comment(kwargs['url']+ '/review_all',proxy=self.proxy)
+                    detail_obj = Shop_Comment(kwargs['url']+ '/review_all',proxy=self.pre_proxy(self.proxy))
                     info_kwargs,comm_kwargs_list = detail_obj.run()
                     kwargs.update(info_kwargs)
                     kwargs = self.clean_kwargs(**kwargs)
@@ -121,10 +121,20 @@ class dp_meishi:
             else:
                 print('code 不是200：--------',json_resp['code'])
                 print(response.content.decode())
-                self.proxy = taiyang_proxy()
+                # ip失效
+                get_error()
                 redis_cli.sadd(redis_name,self.args)
-                raise TimeoutError
-        print('当前IP：', self.proxy)
+        else:
+            print('状态码不是200：,',response.status_code)
+            redis_cli.sadd(redis_name,self.args)
+            raise TypeError
+        # print('当前IP：', self.proxy)
+
+    def pre_proxy(self,proxy):
+        return {
+        'http':'http://'+proxy.replace('\n',''),
+        'https':'https://'+proxy.replace('\n','')
+    }
 
     def pre_args_str(self):
         kwargs = {}
