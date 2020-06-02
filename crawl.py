@@ -91,8 +91,9 @@ class dp_meishi:
         try:
             response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=self.proxy,verify=False,timeout=8)
         except:
-            self.proxy = taiyang_proxy()
+            sleep(4)
             response = requests.post(self.list_url, headers=self.headers, data=self.data,verify=False)
+            self.proxy = taiyang_proxy()
         # print(response.content.decode())
         if response.status_code == 200:
             json_resp = json.loads(response.content.decode())
@@ -122,6 +123,7 @@ class dp_meishi:
                 print(response.content.decode())
                 self.proxy = taiyang_proxy()
                 redis_cli.sadd(redis_name,self.args)
+                raise TimeoutError
         print('当前IP：', self.proxy)
 
     def pre_args_str(self):
