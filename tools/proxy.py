@@ -32,7 +32,7 @@ def abuyun():
 
 
 def get_success(proxy):
-    redis_cli.sadd(proxy)
+    redis_cli.sadd(redis_IP_name,proxy)
 
 def check_ipNum():
     count = redis_cli.scard(redis_IP_name)
