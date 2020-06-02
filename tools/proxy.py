@@ -36,7 +36,7 @@ def get_success(proxy):
 
 def check_ipNum():
     count = redis_cli.scard(redis_IP_name)
-    if int(count) < 2:
+    if int(count) < 10:
         taiyang_proxy()
 
 def get_error():
@@ -49,9 +49,10 @@ def get_ip():
 def taiyang_proxy():
     resp = requests.get('http://http.tiqu.qingjuhe.cn/getip?num=1&type=1&pack=20681&port=11&lb=4&pb=45&regions=')
 # "http://http.tiqu.qingjuhe.cn/getip?num=10&type=1&pack=20681&port=1&lb=4&pb=45&regions="
-    ip_list = resp.content.decode().split('\n')
+    ip_list = resp.text.split('\n')
+    print(resp.text)
     for ip in ip_list:
-        if len(ip) > 4:
+        if len(ip) < 4:
             continue
         redis_cli.sadd(redis_IP_name,ip)
         print('添加ip到池:',ip)
