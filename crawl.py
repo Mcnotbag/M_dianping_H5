@@ -7,7 +7,7 @@ import threading
 from datetime import datetime
 from pprint import pprint
 from time import sleep, time
-from setting import setting
+from setting import *
 import psycopg2
 import requests
 from redis import Redis
@@ -15,19 +15,11 @@ from redis import Redis
 from tools.proxy import *
 from get_shop_comment import Shop_Comment
 from fake_useragent import UserAgent
-ua = setting['ua']
-# 线上
-conn = setting['conn']
-# 本地
-# conn = psycopg2.connect(database="mt_wm_test", user="postgres", password="postgres", host="localhost", port="8635")
 
 cur = conn.cursor()
 # 本地
 # redis_cli = Redis(decode_responses=True)
 # 线上
-redis_cli = setting['redis_cli']
-redis_name = setting['redis_name']
-check_ipNum()
 
 def enpytro():
     s = hex(int(65536 * (1 + random.random())))

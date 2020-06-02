@@ -1,8 +1,7 @@
 import requests
-from setting import setting
+from setting import *
 
-redis_cli = setting['redis_cli']
-redis_name = setting['redis_IP']
+
 
 def abuyun():
     # 要访问的目标页面
@@ -36,7 +35,7 @@ def get_success(proxy):
     redis_cli.sadd(proxy)
 
 def check_ipNum():
-    count = redis_cli.scard(redis_name)
+    count = redis_cli.scard(redis_IP_name)
     if int(count) < 2:
         taiyang_proxy()
 
@@ -45,7 +44,7 @@ def get_error():
 
 def get_ip():
     check_ipNum()
-    return redis_cli.spop(redis_name)
+    return redis_cli.spop(redis_IP_name)
 
 def taiyang_proxy():
     resp = requests.get('http://http.tiqu.qingjuhe.cn/getip?num=1&type=1&pack=20681&port=11&lb=4&pb=45&regions=')
@@ -54,7 +53,7 @@ def taiyang_proxy():
     for ip in ip_list:
         if len(ip) > 4:
             continue
-        redis_cli.sadd(redis_name,ip)
+        redis_cli.sadd(redis_IP_name,ip)
         print('添加ip到池:',ip)
 
 if __name__ == '__main__':
