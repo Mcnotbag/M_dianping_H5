@@ -41,3 +41,5 @@ s = get_hc_v()
 print(s)
 
 print(uuid.uuid4())
+
+print(len(''))

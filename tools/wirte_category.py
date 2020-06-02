@@ -2,13 +2,14 @@
 import os
 import random
 from time import sleep
-
+from setting import *
 import requests
 from lxml import etree
-from tools.proxy import taiyang_proxy
 # with open('../ch10_list.html','r',encoding='utf-8') as f:
 #     text = f.read()
-proxy = taiyang_proxy()
+cur = conn.cursor()
+city_en = 'shanghai'
+city_zh = '上海'
 headers = {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
             'Accept-Encoding': 'gzip, deflate',
@@ -16,12 +17,11 @@ headers = {
             'Cache-Control': 'max-age=0',
             'Connection': 'keep-alive',
             'Host': 'www.dianping.com',
-            'Referer': 'http://www.dianping.com/guangzhou',
+            'Referer': 'http://www.dianping.com/beijing',
             'Upgrade-Insecure-Requests': '1',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
         }
-url = 'http://www.dianping.com/guangzhou/ch10'
-
+url = f'http://www.dianping.com/{city_en}/ch10'
 resp = requests.get(url=url,headers=headers)
 text = resp.content.decode()
 print(text)
@@ -51,7 +51,7 @@ def category():
         sleep(random.uniform(2,4))
 
 def region():
-    path = '../region/广州/'
+    path = f'../region/{city_zh}/'
     html = etree.HTML(text)
     urls = html.xpath('//div[@id="region-nav"]/a/@href')
     titles_1 = html.xpath('//div[@id="region-nav"]/a/span/text()')
@@ -75,4 +75,20 @@ def region():
             with open(path + filename, 'w', encoding='utf-8') as f:
                 f.write('')
         sleep(random.uniform(2, 4))
-region()
+
+def get_all_city():
+    city_url = 'http://www.dianping.com/citylist'
+    resp = requests.get(city_url,headers=headers)
+    html = etree.HTML(resp.content.decode())
+    city_list = html.xpath("//div[@class='main-citylist']/ul/li/div/div[@class='findHeight']/a")
+    for city in city_list:
+        city_name = ''.join(city.xpath("./text()"))
+        city_url = 'http:'+''.join(city.xpath("./@href"))
+        print(city_name,city_url)
+        sql = """
+        insert into dianping_beauty.dianping_city(name_zh,url) values ('%s','%s')
+        """ % (city_name,city_url)
+        cur.cur.execute(sql)
+    conn.commit()
+if __name__ == '__main__':
+    get_all_city()

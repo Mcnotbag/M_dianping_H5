@@ -121,6 +121,7 @@ class dp_meishi:
         else:
             print('状态码不是200：,',response.status_code)
             redis_cli.sadd(redis_name,self.args)
+            redis_cli.sadd(redis_IP_name,self.proxy)
             self.proxy = get_ip()
         # print('当前IP：', self.proxy)
 
