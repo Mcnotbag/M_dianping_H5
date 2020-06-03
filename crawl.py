@@ -239,8 +239,8 @@ if __name__ == '__main__':
             print(args)
             meishi = dp_meishi(args)
             meishi.run()
-    work()
-    # for i in range(1):
-    #     t = threading.Thread(target=work)
-    #     t.start()
-    #     sleep(4)
+    # work()
+    for i in range(2):
+        t = threading.Thread(target=work)
+        t.start()
+        sleep(4)

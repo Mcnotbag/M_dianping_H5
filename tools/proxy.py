@@ -48,10 +48,6 @@ def get_error(proxy):
     score = redis_cli.zscore(redis_IP_name,proxy)
     if score == 0:
         mapping = {proxy:-1}
-    elif score == -1:
-        mapping = {proxy:-2}
-    elif score == -2:
-        mapping = {proxy:-2}
     else:
         mapping = {proxy:0}
     redis_cli.zadd(redis_IP_name,mapping)
@@ -64,7 +60,7 @@ def get_ip():
     proxies = redis_cli.zrange(redis_IP_name,0,-1,withscores=True)
     while True:
         proxy,score = random.choice(proxies)
-        if score > -2:
+        if score > -1:
             break
     return proxy
 
