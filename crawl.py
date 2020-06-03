@@ -74,11 +74,11 @@ class dp_meishi:
             'page': '1',
         }
 
-    def get_list(self,page,kwargs):
+    def get_list(self,kwargs):
         self.headers['Referer'] = f'http://www.dianping.com/search/map/category/{self.cityId}/10/{self.g_id}'
         self.data['categoryId'] = self.g_id.replace('g', '')
         self.data['regionId'] = self.r_id.replace('r','').replace('c','')
-        self.data['page'] = str(page)
+        self.data['page'] = self.page
         try:
             proxies = self.pre_proxy(self.proxy)
             response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=proxies,verify=False,timeout=8)
@@ -237,12 +237,12 @@ class dp_meishi:
             # print('店铺已经存在:',kwargs['id'],kwargs['shopname'])
     def run(self):
         kwargs = self.pre_args_str()
-        self.get_list(self.page,kwargs)
+        self.get_list(kwargs)
         print('总页数：', self.page_count)
         if self.page_count > 1:
             for self.page in range(2,self.page_count):
                 print('当前页数---',self.page)
-                self.get_list(self.page,kwargs)
+                self.get_list(kwargs)
 if __name__ == '__main__':
     def work():
         while redis_cli.scard(redis_name):
