@@ -93,4 +93,4 @@ def get_all_city():
         cur.cur.execute(sql)
     conn.commit()
 if __name__ == '__main__':
-    get_all_city()
+    region()
