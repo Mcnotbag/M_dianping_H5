@@ -66,7 +66,7 @@ def get_ip():
 
 
 def taiyang_proxy():
-    resp = requests.get('http://http.tiqu.qingjuhe.cn/getip?num=5&type=1&pack=20681&port=1&lb=4&pb=45&regions=440000')
+    resp = requests.get('http://http.tiqu.qingjuhe.cn/getip?num=5&type=1&pack=20681&port=1&lb=4&pb=45&regions=')
     ip_list = resp.text.split('\n')
     for ip in ip_list:
         if len(ip) < 2:
