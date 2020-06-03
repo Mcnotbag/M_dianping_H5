@@ -107,7 +107,7 @@ class Shop_Comment():
         try:
             review_prefix = result.group(1)[:2]
         except:
-            print('关注下这个页面，没有数据',self.url)
+            # print('关注下这个页面，没有数据',self.url)
             return False
 
 
