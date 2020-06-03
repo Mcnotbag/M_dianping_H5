@@ -226,12 +226,12 @@ class dp_meishi:
             # print('店铺已经存在:',kwargs['id'],kwargs['shopname'])
     def run(self):
         kwargs = self.pre_args_str()
-        self.get_list('1',kwargs)
-        if self.page_count != 1:
-            print('总页数：',self.page_count)
-            for page in range(2,self.page_count):
-                print('当前页数---',page)
-                self.get_list(page,kwargs)
+        self.get_list(self.page,kwargs)
+        print('总页数：', self.page_count)
+        if self.page_count > 1:
+            for self.page in range(2,self.page_count):
+                print('当前页数---',self.page)
+                self.get_list(self.page,kwargs)
 if __name__ == '__main__':
     def work():
         while redis_cli.scard(redis_name):
