@@ -40,7 +40,7 @@ def check_ipNum():
         taiyang_proxy()
 
 def get_error(proxy):
-    redis_cli.sadd('redis_IP2',proxy)
+    redis_cli.sadd(redis_IP_name,proxy)
     check_ipNum()
 
 def get_ip():

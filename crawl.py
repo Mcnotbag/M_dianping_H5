@@ -81,7 +81,6 @@ class dp_meishi:
         self.data['page'] = str(page)
         try:
             proxies = self.pre_proxy(self.proxy)
-            print(proxies)
             response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=proxies,verify=False,timeout=8)
         except:
             self.proxy = get_ip()
@@ -92,7 +91,8 @@ class dp_meishi:
             if json_resp['code'] == 200:
                 # 将ip添加回ip池
                 get_success(self.proxy)
-                self.page_count = json_resp['pageCount']
+                if self.page == 1:
+                    self.page_count = json_resp['pageCount']
                 for shop in json_resp['shopRecordBeanList']:
                     kwargs['shopid'] = shop['shopId']
                     kwargs['shopname'] = shop['shopName'].replace("'",'‘')
@@ -114,15 +114,16 @@ class dp_meishi:
                     self.insert_comment(comm_kwargs_list)
             else:
                 print('code 不是200：--------',json_resp['code'])
-                get_error(self.proxy)
-                self.proxy = get_ip()
+                self.page_count = 1
+                # get_error(self.proxy)
+                # self.proxy = get_ip()
                 redis_cli.sadd(redis_name,self.args)
         else:
             print('状态码不是200：,',response.status_code)
             redis_cli.sadd(redis_name,self.args)
             redis_cli.sadd(redis_IP_name,self.proxy)
             self.proxy = get_ip()
-        # print('当前IP：', self.proxy)
+        print('当前IP：', self.proxy)
 
     def pre_proxy(self,proxy):
         return {
@@ -202,7 +203,7 @@ class dp_meishi:
                 # print('评论已存在',comment['id'],'店名:',comment['shopname'])
                 pass
         conn.commit()
-        print('评论插入成功：')
+        # print('评论插入成功：')
 
     def insert_shop_info(self,**kwargs):
         sql = """
@@ -216,10 +217,11 @@ class dp_meishi:
             cur.execute(sql)
             conn.commit()
             # pprint(kwargs)
-            print('插入成功:',kwargs['id'],kwargs['shopname'])
+            # print('插入成功:',kwargs['id'],kwargs['shopname'])
         except Exception as e:
-            print(e)
-            print('店铺已经存在:',kwargs['id'],kwargs['shopname'])
+            pass
+            # print(e)
+            # print('店铺已经存在:',kwargs['id'],kwargs['shopname'])
     def run(self):
         kwargs = self.pre_args_str()
         self.get_list('1',kwargs)
