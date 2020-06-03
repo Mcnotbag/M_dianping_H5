@@ -54,3 +54,5 @@ print(re,ret)
 
 num = redis_cli.zcount('test',2,3)
 print(num)
+
+redis_cli.zremrangebyscore('test',2,3)

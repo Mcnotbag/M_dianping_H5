@@ -128,7 +128,7 @@ class dp_meishi:
                 #     get_success(self.proxy)
                 #     self.proxy = get_ip()
                 if self.page > 100:
-                    self.page = self.page_count
+                    self.page_count = self.page
 
         else:
             print('状态码不是200：,',response.status_code)

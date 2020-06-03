@@ -43,6 +43,7 @@ def check_ipNum():
     count = redis_cli.zcount(redis_IP_name,0,1)
     if int(count) < 5:
         taiyang_proxy()
+    redis_cli.zremrangebyscore(redis_IP_name,-1,0)
 
 def get_error(proxy):
     score = redis_cli.zscore(redis_IP_name,proxy)
