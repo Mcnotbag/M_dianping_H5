@@ -8,8 +8,8 @@ import requests
 from lxml import etree
 # with open('../ch10_list.html','r',encoding='utf-8') as f:
 #     text = f.read()
-conn = psycopg2.connect(database="crawler", user="root", password="9TTjkHY^Y#UeLORZ", host="10.101.0.90", port="8635")
-cur = conn.cursor()
+# conn = psycopg2.connect(database="crawler", user="root", password="9TTjkHY^Y#UeLORZ", host="10.101.0.90", port="8635")
+# cur = conn.cursor()
 city_en = 'chengdu'
 city_zh = '成都'
 headers = {
@@ -90,7 +90,7 @@ def get_all_city():
         sql = """
         insert into dianping_beauty.dianping_city(name_zh,url) values ('%s','%s')
         """ % (city_name,city_url)
-        cur.cur.execute(sql)
-    conn.commit()
+        # cur.cur.execute(sql)
+    # conn.commit()
 if __name__ == '__main__':
     region()
