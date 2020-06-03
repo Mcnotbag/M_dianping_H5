@@ -2,6 +2,9 @@
 import json
 import os
 
+import redis
+
+redis_cli = redis.Redis(decode_responses=True)
 # filename = [i for i in os.listdir('woff_file') if '.json' in i]
 # print(filename)
 #
@@ -43,3 +46,8 @@ print(s)
 print(uuid.uuid4())
 
 print(len(''))
+
+ret = redis_cli.zrange('test',0,-1,withscores=True)
+print(ret)
+re,ret = random.choice(ret)
+print(re,ret)

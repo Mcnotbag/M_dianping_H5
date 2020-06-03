@@ -83,6 +83,7 @@ class dp_meishi:
             proxies = self.pre_proxy(self.proxy)
             response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=proxies,verify=False,timeout=8)
         except:
+            get_error(self.proxy)
             self.proxy = get_ip()
             response = requests.post(self.list_url, headers=self.headers, data=self.data,verify=False,timeout=8)
         # print(response.content.decode())
@@ -114,7 +115,6 @@ class dp_meishi:
                     self.insert_comment(comm_kwargs_list)
             else:
                 print('code 不是200：--------',json_resp['code'])
-                self.page_count = 1
                 get_error(self.proxy)
                 self.proxy = get_ip()
                 if self.page == 1:
@@ -123,7 +123,6 @@ class dp_meishi:
             print('状态码不是200：,',response.status_code)
             if self.page == 1:
                 redis_cli.sadd(redis_name,self.args)
-            redis_cli.sadd(redis_IP_name,self.proxy)
             get_error(self.proxy)
             self.proxy = get_ip()
         # print('当前IP：', self.proxy)

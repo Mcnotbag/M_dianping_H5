@@ -1,3 +1,5 @@
+import random
+
 import requests
 from setting import *
 
@@ -32,7 +34,10 @@ def abuyun():
 
 
 def get_success(proxy):
-    redis_cli.sadd(redis_IP_name,proxy)
+    mapping = {
+        proxy:1
+    }
+    redis_cli.zadd(redis_IP_name,mapping)
 
 def check_ipNum():
     count = redis_cli.scard(redis_IP_name)
@@ -40,14 +45,25 @@ def check_ipNum():
         taiyang_proxy()
 
 def get_error(proxy):
-    redis_cli.sadd(redis_IP_name,proxy)
+    score = redis_cli.zscore(redis_IP_name,proxy)
+    if score == 0:
+        mapping = {proxy:-1}
+    else:
+        mapping = {proxy:0}
+    redis_cli.zadd(redis_IP_name,mapping)
     check_ipNum()
 
 def get_ip():
-    count = redis_cli.scard(redis_IP_name)
-    if int(count) == 0:
-        check_ipNum()
-    return redis_cli.spop(redis_IP_name)
+    proxies = redis_cli.zrange(redis_IP_name,0,-1,withscores=True)
+    while True:
+        proxy,score = random.choice(proxies)
+        if score != -1:
+            break
+    return proxy
+    # count = redis_cli.scard(redis_IP_name)
+    # if int(count) == 0:
+    #     check_ipNum()
+    # return redis_cli.spop(redis_IP_name)
 
 def taiyang_proxy():
     resp = requests.get('http://http.tiqu.qingjuhe.cn/getip?num=5&type=1&pack=20681&port=1&lb=4&pb=45&regions=440000')
@@ -55,7 +71,8 @@ def taiyang_proxy():
     for ip in ip_list:
         if len(ip) < 2:
             continue
-        redis_cli.sadd(redis_IP_name,ip)
+        mapping = {ip:1}
+        redis_cli.zadd(redis_IP_name,mapping)
         print('添加ip到池:',ip)
 
 if __name__ == '__main__':
