@@ -39,7 +39,8 @@ def check_ipNum():
     if int(count) < 5:
         taiyang_proxy()
 
-def get_error():
+def get_error(proxy):
+    redis_cli.sadd('redis_IP2',proxy)
     check_ipNum()
 
 def get_ip():
