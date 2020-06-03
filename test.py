@@ -51,3 +51,6 @@ ret = redis_cli.zrange('test',0,-1,withscores=True)
 print(ret)
 re,ret = random.choice(ret)
 print(re,ret)
+
+num = redis_cli.zcount('test',2,3)
+print(num)

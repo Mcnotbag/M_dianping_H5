@@ -40,7 +40,7 @@ def get_success(proxy):
     redis_cli.zadd(redis_IP_name,mapping)
 
 def check_ipNum():
-    count = redis_cli.zcard(redis_IP_name)
+    count = redis_cli.zcount(redis_IP_name,0,-1)
     if int(count) < 5:
         taiyang_proxy()
 
@@ -54,7 +54,7 @@ def get_error(proxy):
     check_ipNum()
 
 def get_ip():
-    count = redis_cli.zcard(redis_IP_name)
+    count = redis_cli.zcount(redis_IP_name,0,-1)
     if int(count) == 0:
         check_ipNum()
     proxies = redis_cli.zrange(redis_IP_name,0,-1,withscores=True)
