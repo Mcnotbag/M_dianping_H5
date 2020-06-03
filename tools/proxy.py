@@ -44,6 +44,9 @@ def get_error(proxy):
     check_ipNum()
 
 def get_ip():
+    count = redis_cli.scard(redis_IP_name)
+    if int(count) == 0:
+        check_ipNum()
     return redis_cli.spop(redis_IP_name)
 
 def taiyang_proxy():
