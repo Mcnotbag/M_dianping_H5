@@ -119,7 +119,8 @@ class dp_meishi:
                     redis_cli.sadd(redis_name, self.args)
                 # 如果翻页到50以后，不能将IP认定为不能使用
                 if self.page < 50:
-                    get_error(self.proxy)
+                    # get_error(self.proxy)
+                    get_success(self.proxy)
                     self.proxy = get_ip()
                 elif 50 < self.page < 100:
                     get_success(self.proxy)
