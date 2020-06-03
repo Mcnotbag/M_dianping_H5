@@ -117,13 +117,16 @@ class dp_meishi:
                 self.page_count = 1
                 get_error(self.proxy)
                 self.proxy = get_ip()
-                redis_cli.sadd(redis_name,self.args)
+                if self.page == 1:
+                    redis_cli.sadd(redis_name, self.args)
         else:
             print('状态码不是200：,',response.status_code)
-            redis_cli.sadd(redis_name,self.args)
+            if self.page == 1:
+                redis_cli.sadd(redis_name,self.args)
             redis_cli.sadd(redis_IP_name,self.proxy)
+            get_error(self.proxy)
             self.proxy = get_ip()
-        print('当前IP：', self.proxy)
+        # print('当前IP：', self.proxy)
 
     def pre_proxy(self,proxy):
         return {
