@@ -40,7 +40,7 @@ def get_success(proxy):
     redis_cli.zadd(redis_IP_name,mapping)
 
 def check_ipNum():
-    count = redis_cli.scard(redis_IP_name)
+    count = redis_cli.zcard(redis_IP_name)
     if int(count) < 5:
         taiyang_proxy()
 
@@ -54,16 +54,16 @@ def get_error(proxy):
     check_ipNum()
 
 def get_ip():
+    count = redis_cli.zcard(redis_IP_name)
+    if int(count) == 0:
+        check_ipNum()
     proxies = redis_cli.zrange(redis_IP_name,0,-1,withscores=True)
     while True:
         proxy,score = random.choice(proxies)
         if score != -1:
             break
     return proxy
-    # count = redis_cli.scard(redis_IP_name)
-    # if int(count) == 0:
-    #     check_ipNum()
-    # return redis_cli.spop(redis_IP_name)
+
 
 def taiyang_proxy():
     resp = requests.get('http://http.tiqu.qingjuhe.cn/getip?num=5&type=1&pack=20681&port=1&lb=4&pb=45&regions=440000')
