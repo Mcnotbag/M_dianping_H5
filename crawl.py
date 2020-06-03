@@ -121,6 +121,8 @@ class dp_meishi:
                     self.proxy = get_ip()
                     if self.page == 1:
                         redis_cli.sadd(redis_name, self.args)
+                if self.page > 100:
+                    self.page = self.page_count
         else:
             print('状态码不是200：,',response.status_code)
             if self.page == 1:
