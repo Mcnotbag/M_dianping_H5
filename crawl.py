@@ -115,8 +115,8 @@ class dp_meishi:
             else:
                 print('code 不是200：--------',json_resp['code'])
                 self.page_count = 1
-                # get_error(self.proxy)
-                # self.proxy = get_ip()
+                get_error(self.proxy)
+                self.proxy = get_ip()
                 redis_cli.sadd(redis_name,self.args)
         else:
             print('状态码不是200：,',response.status_code)
