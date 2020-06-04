@@ -10,8 +10,8 @@ from lxml import etree
 #     text = f.read()
 # conn = psycopg2.connect(database="crawler", user="root", password="9TTjkHY^Y#UeLORZ", host="10.101.0.90", port="8635")
 # cur = conn.cursor()
-city_en = 'hangzhou'
-city_zh = '杭州'
+city_en = 'tianjin'
+city_zh = '天津'
 headers = {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
             'Accept-Encoding': 'gzip, deflate',
