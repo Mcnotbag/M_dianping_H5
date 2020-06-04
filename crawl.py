@@ -81,14 +81,18 @@ class dp_meishi:
         self.data['page'] = self.page
         try:
             proxies = self.pre_proxy(self.proxy)
-            response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=proxies,verify=False,timeout=8)
+            response = requests.post(self.list_url, headers=self.headers, data=self.data,proxies=proxies,verify=False,timeout=10)
         except:
             get_error(self.proxy)
             self.proxy = get_ip()
-            response = requests.post(self.list_url, headers=self.headers, data=self.data,verify=False,timeout=8)
+            response = requests.post(self.list_url, headers=self.headers, data=self.data,verify=False,timeout=10)
         # print(response.content.decode())
         if response.status_code == 200:
-            json_resp = json.loads(response.content.decode())
+            try:
+                json_resp = json.loads(response.content.decode())
+            except Exception as e:
+                print(response.content.decode())
+                raise e
             if json_resp['code'] == 200:
                 # 将ip添加回ip池
                 get_success(self.proxy)
