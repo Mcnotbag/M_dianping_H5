@@ -51,7 +51,7 @@ class dp_meishi:
         'Host': 'www.dianping.com',
         'Origin': 'http://www.dianping.com',
         'Referer': 'http://www.dianping.com/search/map/category/7/10/g112',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+        'User-Agent': ua.random,
         # 'Cookie': 's_ViewType=10; _lxsdk_cuid=17263a5f11cc8-0a35404038c5e8-f7d1d38-1fa400-17263a5f11c6f',
             'Cookie':"_hc.v={};s_ViewType=10;".format(get_hc_v()),
         'X-Request': 'JSON',
