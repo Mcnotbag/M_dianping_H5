@@ -10,8 +10,9 @@ from lxml import etree
 #     text = f.read()
 # conn = psycopg2.connect(database="crawler", user="root", password="9TTjkHY^Y#UeLORZ", host="10.101.0.90", port="8635")
 # cur = conn.cursor()
-city_en = 'nanjing'
-city_zh = '南京'
+proxy = {'http':'http://59.58.148.80:43061','https':'https://59.58.148.80:43061'}
+city_en = 'xian'
+city_zh = '西安'
 headers = {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
             'Accept-Encoding': 'gzip, deflate',
@@ -24,7 +25,7 @@ headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
         }
 url = f'http://www.dianping.com/{city_en}/ch10'
-resp = requests.get(url=url,headers=headers)
+resp = requests.get(url=url,headers=headers,proxies=proxy)
 text = resp.content.decode()
 print(text)
 def category():
@@ -38,7 +39,7 @@ def category():
         if filename in filenames:
             print(filename, '已经存在')
             continue
-        response = requests.get(url,headers=headers)
+        response = requests.get(url,headers=headers,proxies=proxy)
         html = etree.HTML((response.content.decode()))
         category_3_list = html.xpath('//div[@id="classfy-sub"]/a')
         for category_3 in category_3_list[1:]:
@@ -64,7 +65,7 @@ def region():
         if filename in filenames:
             print(filename, '已经存在')
             continue
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers,proxies=proxy)
         html = etree.HTML((response.content.decode()))
         category_3_list = html.xpath('//div[@id="region-nav-sub"]/a')
         for category_3 in category_3_list[1:]:
