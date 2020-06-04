@@ -4,10 +4,10 @@ from redis import Redis
 
 # 线上
 redis_cli = Redis(host='10.101.0.239',password='abc123',decode_responses=True)
-redis_name = 'dp_ch10_chengdu'
+redis_name = 'dp_ch10_zhengzhou'
 def wirte_redis_request():
     cate_path = '../category/'
-    region_path = '../region/成都/'
+    region_path = '../region/郑州/'
     filenames = os.listdir(cate_path)
     for filename in filenames:
         category_2_id = filename.replace('.txt','').split('$')[0]
