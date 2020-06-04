@@ -11,8 +11,8 @@ from lxml import etree
 # conn = psycopg2.connect(database="crawler", user="root", password="9TTjkHY^Y#UeLORZ", host="10.101.0.90", port="8635")
 # cur = conn.cursor()
 proxy = {'http':'http://122.192.174.187:43781','https':'https://122.192.174.187:43781'}
-city_en = 'ningbo'
-city_zh = '宁波'
+city_en = 'changsha'
+city_zh = '长沙'
 headers = {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
             'Accept-Encoding': 'gzip, deflate',

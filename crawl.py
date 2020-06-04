@@ -32,9 +32,9 @@ def get_hc_v():
 
 class dp_meishi:
     def __init__(self,dp_args):
-        self.city_name = '宁波市'
-        self.city_en_name = 'ningbo'
-        self.cityId = '11'
+        self.city_name = '长沙市'
+        self.city_en_name = 'changsha'
+        self.cityId = '344'
         self.proxy = get_ip()
         self.g_id = None
         self.r_id = None
