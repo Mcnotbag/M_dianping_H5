@@ -183,21 +183,21 @@ class dp_meishi:
             kwargs['comment_cnt'] = '0'
         # 环境评分
         try:
-            kwargs['env_score'] = kwargs['env_score'].replace('环境：','').replace('做工工艺：','').replace('服务：','')
+            kwargs['env_score'] = kwargs['env_score'].replace('环境：','').replace('做工工艺：','').replace('服务：','').replace('做工品质：','')
         except Exception as e:
             kwargs['env_score'] = 0
         if kwargs['env_score'] == '':
             kwargs['env_score'] = 0
         # 口味评分
         try:
-            kwargs['pro_score'] = kwargs['pro_score'].replace('口味：','').replace('款式设计：','').replace('效果：','').replace('产品：','').replace('设施：','').replace('服务：','')
+            kwargs['pro_score'] = kwargs['pro_score'].replace('口味：','').replace('款式设计：','').replace('效果：','').replace('产品：','').replace('设施：','').replace('服务：','').replace('颜色款式：','')
         except Exception as e:
             kwargs['pro_score'] = 0
         if kwargs['pro_score'] == '':
             kwargs['pro_score'] = 0
         # 服务评分
         try:
-            kwargs['ser_score'] = kwargs['ser_score'].replace('服务：','').replace('环保材质：','').replace('设施配置：','')
+            kwargs['ser_score'] = kwargs['ser_score'].replace('服务：','').replace('环保材质：','').replace('设施配置：','').replace('安装服务：','')
         except Exception as e:
             kwargs['ser_score'] = 0
         if kwargs['ser_score'] == "":
