@@ -52,3 +52,8 @@ sql = """
             """ % comment
 
 print(sql)
+
+
+
+kwargs = {'machao':''.join([]),'liming':''}
+print(kwargs['machao'])

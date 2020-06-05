@@ -179,16 +179,24 @@ class dp_meishi:
         except:
             kwargs['comment_cnt'] = '0'
         # 环境评分
-        kwargs['env_score'] = kwargs['env_score'].replace('环境：','').replace('做工工艺：','').replace('服务：','')
+        try:
+            kwargs['env_score'] = kwargs['env_score'].replace('环境：','').replace('做工工艺：','').replace('服务：','')
+        except Exception as KeyError:
+            kwargs['env_score'] = 0
         if kwargs['env_score'] == '':
             kwargs['env_score'] = 0
         # 口味评分
-        kwargs['pro_score'] = kwargs['pro_score'].replace('口味：','').replace('款式设计：','').replace('效果：','').replace('产品：','').replace('设施：','')
+        try:
+            kwargs['pro_score'] = kwargs['pro_score'].replace('口味：','').replace('款式设计：','').replace('效果：','').replace('产品：','').replace('设施：','')
+        except Exception as KeyError:
+            kwargs['pro_score'] = 0
         if kwargs['pro_score'] == '':
             kwargs['pro_score'] = 0
         # 服务评分
-        kwargs['ser_score'] = kwargs['ser_score'].replace('服务：','').replace('环保材质：','')
-
+        try:
+            kwargs['ser_score'] = kwargs['ser_score'].replace('服务：','').replace('环保材质：','')
+        except Exception as KeyError:
+            kwargs['ser_score'] = 0
         if kwargs['ser_score'] == "":
             kwargs['ser_score'] = 0
         # 人均消费
