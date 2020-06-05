@@ -184,21 +184,21 @@ class dp_meishi:
         # 环境评分
         try:
             kwargs['env_score'] = kwargs['env_score'].replace('环境：','').replace('做工工艺：','').replace('服务：','')
-        except Exception as KeyError:
+        except Exception as e:
             kwargs['env_score'] = 0
         if kwargs['env_score'] == '':
             kwargs['env_score'] = 0
         # 口味评分
         try:
             kwargs['pro_score'] = kwargs['pro_score'].replace('口味：','').replace('款式设计：','').replace('效果：','').replace('产品：','').replace('设施：','')
-        except Exception as KeyError:
+        except Exception as e:
             kwargs['pro_score'] = 0
         if kwargs['pro_score'] == '':
             kwargs['pro_score'] = 0
         # 服务评分
         try:
             kwargs['ser_score'] = kwargs['ser_score'].replace('服务：','').replace('环保材质：','')
-        except Exception as KeyError:
+        except Exception as e:
             kwargs['ser_score'] = 0
         if kwargs['ser_score'] == "":
             kwargs['ser_score'] = 0
@@ -224,7 +224,9 @@ class dp_meishi:
                 cur.execute(sql)
             except Exception as e:
                 # print('评论已存在',comment['id'],'店名:',comment['shopname'])
-                raise e
+                if e.__class__ != psycopg2.errors.UniqueViolation:
+                    raise e
+
         conn.commit()
         # print('评论插入成功：')
 
@@ -240,10 +242,10 @@ class dp_meishi:
             cur.execute(sql)
             conn.commit()
             # pprint(kwargs)
-            print('插入成功:',kwargs['id'],kwargs['shopname'])
+            # print('插入成功:',kwargs['id'],kwargs['shopname'])
         except Exception as e:
-            # print(e)
-            raise e
+            if e.__class__ != psycopg2.errors.UniqueViolation:
+                raise e
             # print('店铺已经存在:',kwargs['id'],kwargs['shopname'])
     def run(self):
         kwargs = self.pre_args_str()

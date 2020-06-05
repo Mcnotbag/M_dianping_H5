@@ -52,8 +52,8 @@ sql = """
             """ % comment
 
 print(sql)
-
-
-
-kwargs = {'machao':''.join([]),'liming':''}
-print(kwargs['machao'])
+try:
+    cur.execute(sql)
+except Exception as e:
+    if e.__class__ == psycopg2.errors.UndefinedTable:
+        print('捕获')

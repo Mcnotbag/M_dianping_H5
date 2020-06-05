@@ -268,7 +268,7 @@ class Shop_Comment():
             #                i in user_review]
             comments = comm.xpath('./div[@class="review-words Hide"]')[0] if comm.xpath('./div[@class="review-words Hide"]') != [] else comm.xpath('.//div[@class="review-words"]')[0]
 
-            comm_kwargs['comment'] = comments.xpath('string(.)').replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '').replace('\t','')
+            comm_kwargs['comment'] = comments.xpath('string(.)').replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '').replace('\t','').replace("'",'’')
 
             # print(comments['comment'])
             # 评论时间
@@ -281,7 +281,6 @@ class Shop_Comment():
             # id user_name + $ + com_date
             hash_str = comm_kwargs['user_name'] + '$' + comm_kwargs['com_date']
             comm_kwargs['id'] = hashlib.md5(hash_str.encode('utf-8')).hexdigest()
-            print(comm_kwargs)
             self.comment_list.append(comm_kwargs)
 
     def run(self):
