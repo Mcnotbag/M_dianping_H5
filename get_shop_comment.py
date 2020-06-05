@@ -251,6 +251,13 @@ class Shop_Comment():
             comm_kwargs['pro_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[1]/text()')).replace('\n','').replace(' ','').replace('口味：','').replace('款式设计：','').replace('效果：','').replace('设施：','')
             comm_kwargs['env_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[2]/text()')).replace('\n','').replace(' ','').replace('环境：','').replace('做工工艺：','')
             comm_kwargs['ser_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[3]/text()')).replace('\n','').replace(' ','').replace('服务：','').replace('环保材质：','')
+            # 处理评分
+            if comm_kwargs['pro_score'] == '':
+                comm_kwargs['pro_score'] = 0
+            if comm_kwargs['env_score'] == '':
+                comm_kwargs['env_score'] = 0
+            if comm_kwargs['ser_score'] == '':
+                comm_kwargs['ser_score'] = 0
 
             # 获取用户评论
             # comm_kwargs['comment'] = ''.join(comm.xpath('./div[@class="review-words Hide"]/text()')).replace(' ', '').replace('⃣', '.').replace('\n', '').replace('收起评论', '').replace("'",'’')
