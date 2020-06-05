@@ -179,10 +179,7 @@ class dp_meishi:
         except:
             kwargs['comment_cnt'] = '0'
         # 环境评分
-        try:
-            kwargs['env_score'] = kwargs['env_score'].replace('环境：','').repalce('做工工艺：','').replace('服务：','')
-        except:
-            kwargs['env_score'] = 0
+        kwargs['env_score'] = kwargs['env_score'].replace('环境：','').replace('做工工艺：','').replace('服务：','')
         if kwargs['env_score'] == '':
             kwargs['env_score'] = 0
         # 口味评分
@@ -190,7 +187,6 @@ class dp_meishi:
         if kwargs['pro_score'] == '':
             kwargs['pro_score'] = 0
         # 服务评分
-
         kwargs['ser_score'] = kwargs['ser_score'].replace('服务：','').repalce('环保材质：','')
 
         if kwargs['ser_score'] == "":
