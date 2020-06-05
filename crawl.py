@@ -32,9 +32,11 @@ def get_hc_v():
 
 class dp_meishi:
     def __init__(self,dp_args):
-        self.city_name = '长沙市'
-        self.city_en_name = 'changsha'
-        self.cityId = '344'
+        self.city_name = '深圳市'
+        self.city_en_name = 'shenzhen'
+        self.cityId = '7'
+        self.chtype = '20'
+        self.chtype_name = '购物'
         self.proxy = get_ip()
         self.g_id = None
         self.r_id = None
@@ -50,7 +52,7 @@ class dp_meishi:
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8;',
         'Host': 'www.dianping.com',
         'Origin': 'http://www.dianping.com',
-        'Referer': 'http://www.dianping.com/search/map/category/7/10/g112',
+        'Referer': 'http://www.dianping.com/search/map/category/7/20/g112',
         'User-Agent': ua.random,
         # 'Cookie': 's_ViewType=10; _lxsdk_cuid=17263a5f11cc8-0a35404038c5e8-f7d1d38-1fa400-17263a5f11c6f',
             'Cookie':"_hc.v={};s_ViewType=10;".format(get_hc_v()),
@@ -61,7 +63,7 @@ class dp_meishi:
             'cityId': self.cityId,
             'cityEnName': self.city_en_name,
             'promoId': '0',
-            'shopType': '10',
+            'shopType': self.chtype,
             'categoryId': '112',
             'regionId': '0',
             'sortMode': '2',
@@ -75,7 +77,7 @@ class dp_meishi:
         }
 
     def get_list(self,kwargs):
-        self.headers['Referer'] = f'http://www.dianping.com/search/map/category/{self.cityId}/10/{self.g_id}'
+        self.headers['Referer'] = f'http://www.dianping.com/search/map/category/{self.cityId}/{self.chtype}/{self.g_id}'
         self.data['categoryId'] = self.g_id.replace('g', '')
         self.data['regionId'] = self.r_id.replace('r','').replace('c','')
         self.data['page'] = self.page
@@ -153,7 +155,7 @@ class dp_meishi:
         kwargs = {}
         dp_args = self.args
         kwargs['source_data'] = '大众点评'
-        kwargs['category_tags_l1_name'] = '美食'
+        kwargs['category_tags_l1_name'] = self.chtype_name
         kwargs['category_tags_l2_name'] = dp_args.split(';')[0].split('$')[1]
         kwargs['category_tags_l3_name'] = dp_args.split(';')[1].split('$')[1]
         self.g_id = dp_args.split(';')[1].split('$')[0]
@@ -255,8 +257,8 @@ if __name__ == '__main__':
             print(args)
             meishi = dp_meishi(args)
             meishi.run()
-    # work()
-    for i in range(4):
-        t = threading.Thread(target=work)
-        t.start()
-        sleep(2)
+    work()
+    # for i in range(4):
+    #     t = threading.Thread(target=work)
+    #     t.start()
+    #     sleep(2)
