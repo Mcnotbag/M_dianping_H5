@@ -222,6 +222,7 @@ class dp_meishi:
             except Exception as e:
                 # print('评论已存在',comment['id'],'店名:',comment['shopname'])
                 print(e)
+                raise e
         conn.commit()
         # print('评论插入成功：')
 
