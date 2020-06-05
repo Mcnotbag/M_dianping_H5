@@ -225,6 +225,7 @@ class dp_meishi:
             except Exception as e:
                 # print('评论已存在',comment['id'],'店名:',comment['shopname'])
                 if e.__class__ != psycopg2.errors.UniqueViolation:
+                    print('sql:', sql)
                     raise e
 
         conn.commit()
@@ -245,6 +246,7 @@ class dp_meishi:
             # print('插入成功:',kwargs['id'],kwargs['shopname'])
         except Exception as e:
             if e.__class__ != psycopg2.errors.UniqueViolation:
+                print('sql:',sql)
                 raise e
             # print('店铺已经存在:',kwargs['id'],kwargs['shopname'])
     def run(self):
