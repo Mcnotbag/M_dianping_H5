@@ -180,21 +180,21 @@ class dp_meishi:
             kwargs['comment_cnt'] = '0'
         # 环境评分
         try:
-            kwargs['env_score'] = kwargs['env_score'].replace('环境：','')
+            kwargs['env_score'] = kwargs['env_score'].replace('环境：','').repalce('做工工艺：','')
         except:
             kwargs['env_score'] = 0
         if kwargs['env_score'] == '':
             kwargs['env_score'] = 0
         # 口味评分
         try:
-            kwargs['pro_score'] = kwargs['pro_score'].replace('口味：','')
+            kwargs['pro_score'] = kwargs['pro_score'].replace('口味：','').replace('款式设计：','')
         except:
             kwargs['pro_score'] = 0
         if kwargs['pro_score'] == '':
             kwargs['pro_score'] = 0
         # 服务评分
         try:
-            kwargs['ser_score'] = kwargs['ser_score'].replace('服务：','')
+            kwargs['ser_score'] = kwargs['ser_score'].replace('服务：','').repalce('环保材质：','')
         except:
             kwargs['ser_score'] = 0
         if kwargs['ser_score'] == "":
@@ -221,7 +221,7 @@ class dp_meishi:
                 cur.execute(sql)
             except Exception as e:
                 # print('评论已存在',comment['id'],'店名:',comment['shopname'])
-                print(e)
+                print(sql)
                 raise e
         conn.commit()
         # print('评论插入成功：')
@@ -240,8 +240,8 @@ class dp_meishi:
             # pprint(kwargs)
             # print('插入成功:',kwargs['id'],kwargs['shopname'])
         except Exception as e:
-            pass
             # print(e)
+            raise e
             # print('店铺已经存在:',kwargs['id'],kwargs['shopname'])
     def run(self):
         kwargs = self.pre_args_str()

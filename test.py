@@ -2,6 +2,7 @@
 import json
 import os
 
+import psycopg2
 import redis
 
 redis_cli = redis.Redis(decode_responses=True)
@@ -40,19 +41,14 @@ def get_hc_v():
     return enpytro() + enpytro() + "-" + enpytro() + "-" + enpytro() + "-" + enpytro() + "-" + enpytro() + enpytro() + enpytro() + '.' + str(int(time()))
 
 
-s = get_hc_v()
-print(s)
+# comment = {'user_name': '阳光365家具', 'user_level': 'lv1', 'user_vip': 0, 'shopname': '阳光365办公家具(龙华店)', 'shop_score': 50.0, 'pro_score': '产品：5.0', 'env_score': '5.0', 'ser_score': '5.0', 'comment': '深圳市龙华新区和平东路清湖地铁口阳光365国际家具广场办公家具民用家具', 'com_date': '2014-01-17 16:45', 'url': 'http://www.dianping.com/shop/l2oIht3PEa2N4chc/review_all', 'create_time': '2020-06-05 08:07:35', 'shopid': 'l2oIht3PEa2N4chc', 'id': 'd1ac7f653e4d15200029d8716e6773c1'}
+comment = {'user_name': '萍儿._1983', 'user_level': 'lv1', 'user_vip': 0, 'shopname': '雅兰床垫(布吉大芬店)', 'shop_score': 50.0, 'pro_score': '', 'env_score': '', 'ser_score': '', 'comment': '多家对比还是觉得雅兰老品牌，质量很好，睡得安心，用的放心，可以让家人有个好的睡眠是至关重要，身体健康要有好的睡眠，所以一张好的床垫很重要，店员也服务热情，产品讲解很透澈。', 'com_date': '2020-01-02 14:01', 'url': 'http://www.dianping.com/shop/k7vJnN5aWHtFKXGq/review_all', 'create_time': '2020-06-05 16:23:08', 'shopid': 'k7vJnN5aWHtFKXGq', 'id': 'd7ced967794cadf35f236e6528cfcc1b'}
+conn = psycopg2.connect(database="mt_wm_test", user="postgres", password="postgres", host="localhost", port="8635")
+cur = conn.cursor()
 
-print(uuid.uuid4())
+sql = """
+            insert into dianping_beauty.dianping_comment values ('%(id)s','%(shopid)s','%(shopname)s','%(comment)s','%(url)s','%(user_name)s','%(user_level)s','%(user_vip)s','%(pro_score)s',
+            '%(env_score)s','%(ser_score)s','%(com_date)s','%(create_time)s','%(shop_score)s')
+            """ % comment
 
-print(len(''))
-
-ret = redis_cli.zrange('test',0,-1,withscores=True)
-print(ret)
-re,ret = random.choice(ret)
-print(re,ret)
-
-num = redis_cli.zcount('test',2,3)
-print(num)
-
-redis_cli.zremrangebyscore('test',2,3)
+print(sql)
