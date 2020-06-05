@@ -46,14 +46,20 @@ comment = {'user_name': '萍儿._1983', 'user_level': 'lv1', 'user_vip': 0, 'sho
 conn = psycopg2.connect(database="mt_wm_test", user="postgres", password="postgres", host="localhost", port="8635")
 cur = conn.cursor()
 
-sql = """
-            insert into dianping_beauty.dianping_comment values ('%(id)s','%(shopid)s','%(shopname)s','%(comment)s','%(url)s','%(user_name)s','%(user_level)s','%(user_vip)s','%(pro_score)s',
-            '%(env_score)s','%(ser_score)s','%(com_date)s','%(create_time)s','%(shop_score)s')
-            """ % comment
-
-print(sql)
+# sql = """
+#             insert into dianping_comment values ('%(id)s','%(shopid)s','%(shopname)s','%(comment)s','%(url)s','%(user_name)s','%(user_level)s','%(user_vip)s','%(pro_score)s',
+#             '%(env_score)s','%(ser_score)s','%(com_date)s','%(create_time)s','%(shop_score)s')
+#             """ % comment
+# #
+# print(sql)
+sql = """insert into dianping_comment values ('88256ce564fb9f83c3f24ef37931db02','katN3yTjrf26wJd0','花之恋鲜花(福永店)','最喜欢这种鲜花，不仅是送花还是收花，感觉看到这些花心情就很好「产品」图片比什么都有说服力～鲜花很新鲜，篮子很好看(有点重，很有份量)。里面还有一个绿色泡沫，应该是放水给鲜花喝水的「服务」送达时间准时，当天要的时间比较早，没想到可以到的又快又好～','http://www.dianping.com/shop/katN3yTjrf26wJd0/review_all','一颗卤肉蛋','lv6','1','5.0',
+            '5.0','5.0','2019-08-21 17:24','2020-06-05 11:13:36','50.0')
+"""
 try:
     cur.execute(sql)
 except Exception as e:
-    if e.__class__ == psycopg2.errors.UndefinedTable:
-        print('捕获')
+    if e.__class__ == psycopg2.errors.UniqueViolation:
+        pass
+    else:
+        raise e
+conn.commit()
