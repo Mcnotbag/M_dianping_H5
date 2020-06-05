@@ -249,7 +249,7 @@ class Shop_Comment():
             except Exception as ValueError:
                 comm_kwargs['shop_score'] = 0
             comm_kwargs['pro_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[1]/text()')).replace('\n','').replace(' ','').replace('口味：','').replace('款式设计：','').replace('效果：','').replace('设施：','').replace('产品：','')
-            comm_kwargs['env_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[2]/text()')).replace('\n','').replace(' ','').replace('环境：','').replace('做工工艺：','')
+            comm_kwargs['env_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[2]/text()')).replace('\n','').replace(' ','').replace('环境：','').replace('做工工艺：','').replace('服务：','')
             comm_kwargs['ser_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[3]/text()')).replace('\n','').replace(' ','').replace('服务：','').replace('环保材质：','')
             # 处理评分
             if comm_kwargs['pro_score'] == '':
