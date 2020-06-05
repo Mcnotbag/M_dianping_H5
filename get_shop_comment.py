@@ -285,15 +285,17 @@ class Shop_Comment():
             self.comment_list.append(comm_kwargs)
 
     def run(self):
+        self.kwargs = {}
         self.get_svg_html()
         # self.get_max_pages()
         result = self.get_font_map()
         if result:
             self.get_shop_info()
             self.get_user_info()
+            print(self.kwargs['comment_cnt'])
             return self.kwargs,self.comment_list
         else:
             return {},{}
 if __name__ == '__main__':
-    dz = Shop_Comment('http://www.dianping.com/shop/k7vJnN5aWHtFKXGq/review_all','')
+    dz = Shop_Comment('http://www.dianping.com/shop/H7MFbvhbBxGDFAQs/review_all','')
     dz.run()

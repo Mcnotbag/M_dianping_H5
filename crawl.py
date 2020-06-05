@@ -115,6 +115,9 @@ class dp_meishi:
 
                     detail_obj = Shop_Comment(kwargs['url']+ '/review_all',proxy=self.pre_proxy(self.proxy))
                     info_kwargs,comm_kwargs_list = detail_obj.run()
+                    if info_kwargs == {}:
+                        kwargs['comment_cnt'] = '0'
+                        kwargs['comment_tags'] = ''
                     kwargs.update(info_kwargs)
                     kwargs = self.clean_kwargs(**kwargs)
                     self.insert_shop_info(**kwargs)
