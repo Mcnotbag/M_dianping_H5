@@ -56,7 +56,10 @@ class Shop_Comment():
 
     def get_svg_html(self):
         # 获取商家评论页内容
-        index_res = requests.get(self.url, headers=self.headers,timeout=self.timeout,verify=False,proxies=self.proxy)
+        try:
+            index_res = requests.get(self.url, headers=self.headers,timeout=self.timeout,verify=False,proxies=self.proxy)
+        except:
+            index_res = requests.get(self.url, headers=self.headers, timeout=self.timeout, verify=False)
         self.html = index_res.text
 
         # 正则匹配 css 文件
