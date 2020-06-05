@@ -187,7 +187,7 @@ class dp_meishi:
             kwargs['env_score'] = 0
         # 口味评分
         try:
-            kwargs['pro_score'] = kwargs['pro_score'].replace('口味：','').replace('款式设计：','')
+            kwargs['pro_score'] = kwargs['pro_score'].replace('口味：','').replace('款式设计：','').replace('效果：','')
         except:
             kwargs['pro_score'] = 0
         if kwargs['pro_score'] == '':
