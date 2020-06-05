@@ -187,7 +187,7 @@ class dp_meishi:
         if kwargs['pro_score'] == '':
             kwargs['pro_score'] = 0
         # 服务评分
-        kwargs['ser_score'] = kwargs['ser_score'].replace('服务：','').repalce('环保材质：','')
+        kwargs['ser_score'] = kwargs['ser_score'].replace('服务：','').replace('环保材质：','')
 
         if kwargs['ser_score'] == "":
             kwargs['ser_score'] = 0
