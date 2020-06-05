@@ -9,7 +9,6 @@ import re
 import time
 from lxml import etree
 import random
-from tools.proxy import taiyang_proxy
 
 class Shop_Comment():
     def __init__(self,shop_url,proxy):
@@ -272,6 +271,7 @@ class Shop_Comment():
             # id user_name + $ + com_date
             hash_str = comm_kwargs['user_name'] + '$' + comm_kwargs['com_date']
             comm_kwargs['id'] = hashlib.md5(hash_str.encode('utf-8')).hexdigest()
+            print(comm_kwargs)
             self.comment_list.append(comm_kwargs)
 
     def run(self):
@@ -285,5 +285,5 @@ class Shop_Comment():
         else:
             return {},{}
 if __name__ == '__main__':
-    dz = Shop_Comment('http://www.dianping.com/shop/k9H9LPBySg7envDa/review_all',taiyang_proxy())
+    dz = Shop_Comment('http://www.dianping.com/shop/k7vJnN5aWHtFKXGq/review_all','')
     dz.run()

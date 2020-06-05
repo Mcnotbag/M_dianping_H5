@@ -219,9 +219,9 @@ class dp_meishi:
             """ % comment
             try:
                 cur.execute(sql)
-            except:
+            except Exception as e:
                 # print('评论已存在',comment['id'],'店名:',comment['shopname'])
-                pass
+                print(e)
         conn.commit()
         # print('评论插入成功：')
 
