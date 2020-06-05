@@ -237,7 +237,7 @@ class dp_meishi:
             cur.execute(sql)
             conn.commit()
             # pprint(kwargs)
-            # print('插入成功:',kwargs['id'],kwargs['shopname'])
+            print('插入成功:',kwargs['id'],kwargs['shopname'])
         except Exception as e:
             # print(e)
             raise e
