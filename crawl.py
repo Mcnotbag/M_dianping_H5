@@ -32,9 +32,9 @@ def get_hc_v():
 
 class dp_meishi:
     def __init__(self,dp_args):
-        self.city_name = '深圳市'
-        self.city_en_name = 'shenzhen'
-        self.cityId = '7'
+        self.city_name = '广州市'
+        self.city_en_name = 'guangzhou'
+        self.cityId = '4'
         self.chtype = '20'
         self.chtype_name = '购物'
         self.proxy = get_ip()
@@ -248,10 +248,11 @@ class dp_meishi:
             cur.execute(sql)
             conn.commit()
             # pprint(kwargs)
-            print('插入成功:',kwargs['id'],kwargs['shopname'])
+            # print('插入成功:',kwargs['id'],kwargs['shopname'])
         except Exception as e:
             if e.__class__ == psycopg2.errors.UniqueViolation or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
-                print(e)
+                # print(e)
+                pass
             else:
                 print('sql:',sql)
                 raise e
@@ -271,8 +272,8 @@ if __name__ == '__main__':
             print(args)
             meishi = dp_meishi(args)
             meishi.run()
-    work()
-    # for i in range(4):
-    #     t = threading.Thread(target=work)
-    #     t.start()
-    #     sleep(2)
+    # work()
+    for i in range(4):
+        t = threading.Thread(target=work)
+        t.start()
+        sleep(2)
