@@ -217,11 +217,14 @@ class Shop_Comment():
         # comm_kwargs['shopname'] = ''.join(tree.xpath('//div[@class="review-shop-wrap"]/div[@class="shop-info clearfix"]/h1[@class="shop-name"]/text()')).replace("'","’")
         self.kwargs['comment_cnt'] = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='reviews']/text()"))
         # avg_speed = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='price']/text()"))
-        self.kwargs['pro_score'] = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[1]/text()"))
-        self.kwargs['env_score'] = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[2]/text()"))
-        self.kwargs['ser_score'] = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[3]/text()"))
-
+        # self.kwargs['pro_score'] = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[1]/text()"))
+        # self.kwargs['env_score'] = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[2]/text()"))
+        # self.kwargs['ser_score'] = ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[3]/text()"))
+        self.kwargs['pro_score'] = ''.join(re.findall(r'\w+：(.{3})',''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[1]/text()"))))
+        self.kwargs['env_score'] = ''.join(re.findall(r'\w+：(.{3})', ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[2]/text()"))))
+        self.kwargs['ser_score'] = ''.join(re.findall(r'\w+：(.{3})', ''.join(tree.xpath("//div[@class='rank-info']//span[@class='score']/span[3]/text()"))))
         self.kwargs['comment_tags'] = ';'.join(tree.xpath('//div[@class="reviews-tags"]/div[@class="content"]/span/a/@date-type'))
+
 
     def get_user_info(self):
         # 将 self.html 评论区域加密的 class 样式替换成对应的中文字符
@@ -251,9 +254,13 @@ class Shop_Comment():
                 comm_kwargs['shop_score'] = float(''.join(comm.xpath('./div[@class="review-rank"]/span[1]/@class')).replace('sml-rank-stars sml-str','').replace(' star',''))
             except Exception as e:
                 comm_kwargs['shop_score'] = 0
-            comm_kwargs['pro_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[1]/text()')).replace('\n','').replace(' ','').replace('口味：','').replace('款式设计：','').replace('效果：','').replace('设施：','').replace('产品：','').replace('服务：','').replace('颜色款式：','')
-            comm_kwargs['env_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[2]/text()')).replace('\n','').replace(' ','').replace('环境：','').replace('做工工艺：','').replace('服务：','').replace('做工品质：','')
-            comm_kwargs['ser_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[3]/text()')).replace('\n','').replace(' ','').replace('服务：','').replace('环保材质：','').replace('设施配置：','').replace('安装服务：','')
+            # comm_kwargs['pro_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[1]/text()')).replace('\n','').replace(' ','').replace('口味：','').replace('款式设计：','').replace('效果：','').replace('设施：','').replace('产品：','').replace('服务：','').replace('颜色款式：','')
+            # comm_kwargs['env_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[2]/text()')).replace('\n','').replace(' ','').replace('环境：','').replace('做工工艺：','').replace('服务：','').replace('做工品质：','')
+            # comm_kwargs['ser_score'] = ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[3]/text()')).replace('\n','').replace(' ','').replace('服务：','').replace('环保材质：','').replace('设施配置：','').replace('安装服务：','')
+            comm_kwargs['pro_score'] = ''.join(re.findall(r'\w+：(.{3})',''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[1]/text()'))))
+            comm_kwargs['env_score'] = ''.join(re.findall(r'\w+：(.{3})', ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[2]/text()'))))
+            comm_kwargs['ser_score'] = ''.join(re.findall(r'\w+：(.{3})', ''.join(comm.xpath('./div[@class="review-rank"]/span[@class="score"]/span[3]/text()'))))
+
             # 处理评分
             if comm_kwargs['pro_score'] == '':
                 comm_kwargs['pro_score'] = 0
@@ -295,5 +302,5 @@ class Shop_Comment():
         else:
             return {},{}
 if __name__ == '__main__':
-    dz = Shop_Comment('http://www.dianping.com/shop/H7MFbvhbBxGDFAQs/review_all','')
+    dz = Shop_Comment('http://www.dianping.com/shop/k4wgWXxLKrERPu5w/review_all','')
     dz.run()
