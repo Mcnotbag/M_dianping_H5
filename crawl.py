@@ -108,7 +108,7 @@ class dp_meishi:
                     kwargs['url'] = 'http://www.dianping.com/shop/'+ shop['shopId']
                     kwargs['address_gps_lng'] = shop['geoLng']
                     kwargs['address_gps_lat'] = shop['geoLat']
-                    kwargs['address'] = shop['address'].replace("'","’")
+                    kwargs['address'] = shop['address'].replace("'","")
                     kwargs['avg_spend'] = shop['avgPrice']
                     # sleep(random.uniform(0.2,0.5))
                     # print(kwargs['url']+ '/review_all')
@@ -222,7 +222,6 @@ class dp_meishi:
             """ % comment
             try:
                 cur.execute(sql)
-                conn.commit()
             except Exception as e:
                 # print('评论已存在',comment['id'],'店名:',comment['shopname'])
                 if e.__class__ == psycopg2.errors.UniqueViolation or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
@@ -230,6 +229,7 @@ class dp_meishi:
                 else:
                     print('sql:', sql)
                     raise e
+        conn.commit()
 
         # print('评论插入成功：')
 
@@ -248,7 +248,7 @@ class dp_meishi:
             # print('插入成功:',kwargs['id'],kwargs['shopname'])
         except Exception as e:
             if e.__class__ == psycopg2.errors.UniqueViolation or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
-                pass
+                print(e)
             else:
                 print('sql:',sql)
                 raise e
