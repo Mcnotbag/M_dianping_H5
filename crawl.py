@@ -141,7 +141,7 @@ class dp_meishi:
                 #     get_success(self.proxy)
                 #     self.proxy = get_ip()
                 if self.page > 100:
-                    self.page_count = self.page
+                    self.page_count = self.page + 1
 
         else:
             print('状态码不是200：,',response.status_code)
@@ -276,4 +276,4 @@ if __name__ == '__main__':
     for i in range(4):
         t = threading.Thread(target=work)
         t.start()
-        sleep(2)
+        sleep(random.uniform(1,2))
