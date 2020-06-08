@@ -130,8 +130,8 @@ class dp_meishi:
                 if json_resp['code'] != 500:
                     get_success(self.proxy)
                     self.proxy = get_ip()
-                    if self.page == 1:
-                        redis_cli.sadd(redis_name, self.args)
+                    # if self.page == 1:
+                    #     redis_cli.sadd(redis_name, self.args)
                 # 如果翻页到50以后，不能将IP认定为不能使用
                 # if self.page < 50:
                 #     # get_error(self.proxy)
