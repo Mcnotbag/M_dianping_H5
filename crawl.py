@@ -126,6 +126,8 @@ class dp_meishi:
                     self.insert_shop_info(**kwargs)
                     self.insert_comment(comm_kwargs_list)
             else:
+                if self.page > 100:
+                    self.page_count = self.page + 1
                 print('code 不是200：--------',json_resp['code'])
                 if json_resp['code'] != 500:
                     get_success(self.proxy)
@@ -140,8 +142,6 @@ class dp_meishi:
                 # elif 50 < self.page < 100:
                 #     get_success(self.proxy)
                 #     self.proxy = get_ip()
-                if self.page > 100:
-                    self.page_count = self.page + 1
 
         else:
             print('状态码不是200：,',response.status_code)
