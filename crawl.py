@@ -118,6 +118,9 @@ class dp_meishi:
                     if info_kwargs == {}:
                         kwargs['comment_cnt'] = '0'
                         kwargs['comment_tags'] = ''
+                        kwargs['pro_score'] = ''
+                        kwargs['env_score'] = ''
+                        kwargs['ser_score'] = ''
                     kwargs.update(info_kwargs)
                     kwargs = self.clean_kwargs(**kwargs)
                     self.insert_shop_info(**kwargs)
