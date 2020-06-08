@@ -108,7 +108,7 @@ class dp_meishi:
                     kwargs['url'] = 'http://www.dianping.com/shop/'+ shop['shopId']
                     kwargs['address_gps_lng'] = shop['geoLng']
                     kwargs['address_gps_lat'] = shop['geoLat']
-                    kwargs['address'] = shop['address']
+                    kwargs['address'] = shop['address'].replace("'","’")
                     kwargs['avg_spend'] = shop['avgPrice']
                     # sleep(random.uniform(0.2,0.5))
                     # print(kwargs['url']+ '/review_all')
