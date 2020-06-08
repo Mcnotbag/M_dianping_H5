@@ -32,8 +32,8 @@ def get_hc_v():
 
 class dp_meishi:
     def __init__(self,dp_args):
-        self.city_name = '广州市'
-        self.city_en_name = 'guangzhou'
+        self.city_name = '北京市'
+        self.city_en_name = 'beijing'
         self.cityId = '4'
         self.chtype = '20'
         self.chtype_name = '购物'
