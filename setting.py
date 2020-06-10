@@ -12,6 +12,6 @@ conn = psycopg2.connect(database="crawler", user="root", password="9TTjkHY^Y#UeL
 # redis_cli = Redis(decode_responses=True)
 # 线上
 redis_cli = Redis(host='10.101.0.239',password='abc123',decode_responses=True)
-redis_name = 'dp_ch30_shenzhen'
+redis_name = 'dp_ch30_guangzhou'
 
 redis_IP_name = 'redis_IP'
