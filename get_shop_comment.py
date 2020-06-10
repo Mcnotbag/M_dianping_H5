@@ -226,12 +226,13 @@ class Shop_Comment():
         self.kwargs['comment_tags'] = ';'.join(tree.xpath('//div[@class="reviews-tags"]/div[@class="content"]/span/a/@date-type'))
 
 
-    def get_user_info(self):
-        # 将 self.html 评论区域加密的 class 样式替换成对应的中文字符
-        review_class_set = re.findall('<svgmtsi class="(.*?)"></svgmtsi>', self.html, re.S)
-        for class_name in review_class_set:
-            self.html = re.sub('<svgmtsi class="{}"></svgmtsi>'.format(class_name), self.review_font_map[class_name],
-                               self.html)
+    def get_user_info(self,is_sub):
+        if is_sub:
+            # 将 self.html 评论区域加密的 class 样式替换成对应的中文字符
+            review_class_set = re.findall('<svgmtsi class="(.*?)"></svgmtsi>', self.html, re.S)
+            for class_name in review_class_set:
+                self.html = re.sub('<svgmtsi class="{}"></svgmtsi>'.format(class_name), self.review_font_map[class_name],
+                                   self.html)
 
         xhtml = etree.HTML(self.html)
         comm_li = xhtml.xpath('//div[@class="reviews-items"]/ul/li/div[@class="main-review"]')
@@ -295,12 +296,10 @@ class Shop_Comment():
         self.get_svg_html()
         # self.get_max_pages()
         result = self.get_font_map()
-        if result:
-            self.get_shop_info()
-            self.get_user_info()
-            return self.kwargs,self.comment_list
-        else:
-            return {},{}
+
+        self.get_shop_info()
+        self.get_user_info(result)
+        return self.kwargs,self.comment_list
 if __name__ == '__main__':
-    dz = Shop_Comment('http://www.dianping.com/shop/k4wgWXxLKrERPu5w/review_all','')
+    dz = Shop_Comment('http://www.dianping.com/shop/H5QxxIxM9nlzpkyf/review_all','')
     dz.run()
