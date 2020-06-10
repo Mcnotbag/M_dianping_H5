@@ -11,8 +11,8 @@ from lxml import etree
 # conn = psycopg2.connect(database="crawler", user="root", password="9TTjkHY^Y#UeLORZ", host="10.101.0.90", port="8635")
 # cur = conn.cursor()
 proxy = {'http':'http://122.192.174.187:43781','https':'https://122.192.174.187:43781'}
-city_en = 'chongqing'
-city_zh = '重庆'
+city_en = 'shenzhen'
+city_zh = '深圳'
 headers = {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
             'Accept-Encoding': 'gzip, deflate',
@@ -24,12 +24,12 @@ headers = {
             'Upgrade-Insecure-Requests': '1',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
         }
-url = f'http://www.dianping.com/{city_en}/ch20'
+url = f'http://www.dianping.com/{city_en}/ch30'
 resp = requests.get(url=url,headers=headers)
 text = resp.content.decode()
 print(text)
 def category():
-    path = '../category/购物/'
+    path = '../category/休闲娱乐/'
     html = etree.HTML(text)
     urls = html.xpath('//div[@id="classfy"]/a/@href')
     titles_1 = html.xpath('//div[@id="classfy"]/a/span/text()')
@@ -96,4 +96,4 @@ def get_all_city():
         # cur.cur.execute(sql)
     # conn.commit()
 if __name__ == '__main__':
-    region()
+    category()

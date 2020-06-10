@@ -32,11 +32,11 @@ def get_hc_v():
 
 class dp_meishi:
     def __init__(self,dp_args):
-        self.city_name = '重庆市'
-        self.city_en_name = 'chongqing'
-        self.cityId = '9'
-        self.chtype = '10'
-        self.chtype_name = '美食'
+        self.city_name = '深圳市'
+        self.city_en_name = 'shenzhen'
+        self.cityId = '7'
+        self.chtype = '30'
+        self.chtype_name = '休闲娱乐'
         self.proxy = get_ip()
         self.g_id = None
         self.r_id = None
@@ -272,8 +272,8 @@ if __name__ == '__main__':
             print(args)
             meishi = dp_meishi(args)
             meishi.run()
-    # work()
-    for i in range(4):
-        t = threading.Thread(target=work)
-        t.start()
-        sleep(random.uniform(1,2))
+    work()
+    # for i in range(4):
+    #     t = threading.Thread(target=work)
+    #     t.start()
+    #     sleep(random.uniform(1,2))
