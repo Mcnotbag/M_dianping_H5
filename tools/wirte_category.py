@@ -24,12 +24,12 @@ headers = {
             'Upgrade-Insecure-Requests': '1',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
         }
-url = f'http://www.dianping.com/{city_en}/ch50'
+url = f'http://www.dianping.com/{city_en}/ch75'
 resp = requests.get(url=url,headers=headers)
 text = resp.content.decode()
 print(text)
 def category():
-    path = '../category/丽人/'
+    path = '../category/学习培训/'
     html = etree.HTML(text)
     urls = html.xpath('//div[@id="classfy"]/a/@href')
     titles_1 = html.xpath('//div[@id="classfy"]/a/span/text()')
