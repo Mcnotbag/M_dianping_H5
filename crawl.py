@@ -228,9 +228,9 @@ class dp_meishi:
                 conn.commit()
             except Exception as e:
                 # print('评论已存在',comment['id'],'店名:',comment['shopname'])
-                if e.__class__ == psycopg2.errors.UniqueViolation: # or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
-                    conn.commit()
-                    # conn.rollback()
+                if e.__class__ == psycopg2.errors.UniqueViolation or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
+                    # conn.commit()
+                    conn.rollback()
                 else:
                     print('sql:', sql)
                     raise e
@@ -250,9 +250,9 @@ class dp_meishi:
             # pprint(kwargs)
             # print('插入成功:',kwargs['id'],kwargs['shopname'])
         except Exception as e:
-            if e.__class__ == psycopg2.errors.UniqueViolation: # or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
-                # conn.rollback()
-                conn.commit()
+            if e.__class__ == psycopg2.errors.UniqueViolation or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
+                conn.rollback()
+                # conn.commit()
                 # print(e)
             else:
                 print('sql:',sql)
