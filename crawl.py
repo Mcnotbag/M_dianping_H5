@@ -251,7 +251,8 @@ class dp_meishi:
             # print('插入成功:',kwargs['id'],kwargs['shopname'])
         except Exception as e:
             if e.__class__ == psycopg2.errors.UniqueViolation: # or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
-                conn.rollback()
+                # conn.rollback()
+                conn.commit()
                 # print(e)
             else:
                 print('sql:',sql)
