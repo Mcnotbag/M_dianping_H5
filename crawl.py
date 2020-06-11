@@ -229,7 +229,8 @@ class dp_meishi:
             except Exception as e:
                 # print('评论已存在',comment['id'],'店名:',comment['shopname'])
                 if e.__class__ == psycopg2.errors.UniqueViolation: # or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
-                    conn.rollback()
+                    conn.commit()
+                    # conn.rollback()
                 else:
                     print('sql:', sql)
                     raise e
