@@ -24,18 +24,18 @@ headers = {
             'Upgrade-Insecure-Requests': '1',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
         }
-url = f'http://www.dianping.com/{city_en}/ch30'
+url = f'http://www.dianping.com/{city_en}/ch50'
 resp = requests.get(url=url,headers=headers)
 text = resp.content.decode()
 print(text)
 def category():
-    path = '../category/休闲娱乐/'
+    path = '../category/丽人/'
     html = etree.HTML(text)
     urls = html.xpath('//div[@id="classfy"]/a/@href')
     titles_1 = html.xpath('//div[@id="classfy"]/a/span/text()')
     for ind,url in enumerate(urls):
         print(url)
-        filename = url.split('/')[-1] + '$' + titles_1[ind] + '.txt'
+        filename = url.split('/')[-1] + '$' + titles_1[ind].replace('/','') + '.txt'
         filenames = [i for i in os.listdir(path)]
         if filename in filenames:
             print(filename, '已经存在')

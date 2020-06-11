@@ -35,8 +35,8 @@ class dp_meishi:
         self.city_name = '深圳市'
         self.city_en_name = 'shenzhen'
         self.cityId = '7'
-        self.chtype = '30'
-        self.chtype_name = '休闲娱乐'
+        self.chtype = '50'
+        self.chtype_name = '丽人'
         self.proxy = get_ip()
         self.g_id = None
         self.r_id = None

@@ -4,9 +4,9 @@ from redis import Redis
 
 # 线上
 redis_cli = Redis(host='10.101.0.239',password='abc123',decode_responses=True)
-redis_name = 'dp_ch30_shenzhen'
+redis_name = 'dp_ch50_shenzhen'
 def wirte_redis_request():
-    cate_path = '../category/休闲娱乐/'
+    cate_path = '../category/丽人/'
     region_path = '../region/深圳/'
     filenames = os.listdir(cate_path)
     for filename in filenames:
