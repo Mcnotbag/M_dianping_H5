@@ -225,15 +225,14 @@ class dp_meishi:
             """ % comment
             try:
                 cur.execute(sql)
-                conn.commit()
             except Exception as e:
                 # print('评论已存在',comment['id'],'店名:',comment['shopname'])
-                if e.__class__ == psycopg2.errors.UniqueViolation or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
-                    pass
+                if e.__class__ == psycopg2.errors.UniqueViolation: # or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
+                    conn.rollback()
                 else:
                     print('sql:', sql)
                     raise e
-
+        conn.commit()
         # print('评论插入成功：')
 
     def insert_shop_info(self,**kwargs):
@@ -250,9 +249,9 @@ class dp_meishi:
             # pprint(kwargs)
             # print('插入成功:',kwargs['id'],kwargs['shopname'])
         except Exception as e:
-            if e.__class__ == psycopg2.errors.UniqueViolation or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
+            if e.__class__ == psycopg2.errors.UniqueViolation: # or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
+                conn.rollback()
                 # print(e)
-                pass
             else:
                 print('sql:',sql)
                 raise e
