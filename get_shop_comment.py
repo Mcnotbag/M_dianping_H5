@@ -10,6 +10,9 @@ import time
 from lxml import etree
 import random
 
+# conn = psycopg2.connect(database="mt_wm_test", user="postgres", password="postgres", host="localhost", port="8635")
+# cur = conn.cursor()
+
 class Shop_Comment():
     def __init__(self,shop_url,proxy):
         self.proxy = proxy
@@ -245,9 +248,9 @@ class Shop_Comment():
             # 是否vip
             user_vip = comm.xpath('./div[@class="dper-info"]/span[@class="vip"]')
             if user_vip == []:
-                comm_kwargs['user_vip'] = 0
+                comm_kwargs['user_vip'] = False
             else:
-                comm_kwargs['user_vip'] = 1
+                comm_kwargs['user_vip'] = True
             # 店名
             comm_kwargs['shopname'] = ''.join(xhtml.xpath('//div[@class="review-shop-wrap"]/div[@class="shop-info clearfix"]/h1[@class="shop-name"]/text()')).replace("'", "’")
             # 评分
@@ -291,6 +294,25 @@ class Shop_Comment():
             comm_kwargs['id'] = hashlib.md5(hash_str.encode('utf-8')).hexdigest()
             self.comment_list.append(comm_kwargs)
 
+    # def insert_comment(self,comment_list):
+    #     sql = """
+    #     insert into dianping_comment values (%(id)s,%(shopid)s,%(shopname)s,%(comment)s,%(url)s,%(user_name)s,%(user_level)s,%(user_vip)s,%(pro_score)s,
+    #     %(env_score)s,%(ser_score)s,%(com_date)s,%(create_time)s,%(shop_score)s)
+    #     """
+    #     cur.executemany(sql,comment_list)
+    #     conn.commit()
+            # try:
+            #     cur.execute(sql)
+            #     conn.commit()
+            # except Exception as e:
+            #     # print('评论已存在',comment['id'],'店名:',comment['shopname'])
+            #     if e.__class__ == psycopg2.errors.UniqueViolation or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
+            #         pass
+            #     else:
+            #         print('sql:', sql)
+            #         raise e
+
+
     def run(self):
         self.kwargs = {}
         self.get_svg_html()
@@ -301,5 +323,5 @@ class Shop_Comment():
         self.get_user_info(result)
         return self.kwargs,self.comment_list
 if __name__ == '__main__':
-    dz = Shop_Comment('http://www.dianping.com/shop/H5QxxIxM9nlzpkyf/review_all','')
+    dz = Shop_Comment('http://www.dianping.com/shop/HazCP8g4dlSq1pUa/review_all','')
     dz.run()

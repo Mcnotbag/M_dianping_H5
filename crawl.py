@@ -225,6 +225,7 @@ class dp_meishi:
             """ % comment
             try:
                 cur.execute(sql)
+                conn.commit()
             except Exception as e:
                 # print('评论已存在',comment['id'],'店名:',comment['shopname'])
                 if e.__class__ == psycopg2.errors.UniqueViolation or e.__class__ == psycopg2.errors.InFailedSqlTransaction:
@@ -232,7 +233,6 @@ class dp_meishi:
                 else:
                     print('sql:', sql)
                     raise e
-        conn.commit()
 
         # print('评论插入成功：')
 
