@@ -271,8 +271,8 @@ if __name__ == '__main__':
             print(args)
             meishi = dp_meishi(args)
             meishi.run()
-    # work()
-    for i in range(4):
-        t = threading.Thread(target=work)
-        t.start()
-        sleep(random.uniform(1,2))
+    work()
+    # for i in range(4):
+    #     t = threading.Thread(target=work)
+    #     t.start()
+    #     sleep(random.uniform(1,2))
