@@ -32,9 +32,9 @@ def get_hc_v():
 
 class dp_meishi:
     def __init__(self,dp_args):
-        self.city_name = '广州市'
-        self.city_en_name = 'guangzhou'
-        self.cityId = '4'
+        # self.city_name = '广州市'
+        # self.city_en_name = ''
+        # self.cityId = ''
         self.chtype = '10'
         self.chtype_name = '美食'
         self.proxy = get_ip()
@@ -165,7 +165,9 @@ class dp_meishi:
         kwargs['category_tags_l2_name'] = dp_args.split(';')[0].split('$')[1]
         kwargs['category_tags_l3_name'] = dp_args.split(';')[1].split('$')[1]
         self.g_id = dp_args.split(';')[1].split('$')[0]
-        kwargs['city'] = self.city_name
+        kwargs['city'] = dp_args.split(';')[-1].split('$')[0] + '市'
+        self.city_en_name = dp_args.split(';')[-1].split('$')[-1]
+        self.cityId = dp_args.split(';')[-1].split('$')[1]
         kwargs['district'] = dp_args.split(';')[2].split('$')[1]
         if len(dp_args.split(';')) == 3:
             kwargs['region'] = ''

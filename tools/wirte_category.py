@@ -12,7 +12,7 @@ from lxml import etree
 # cur = conn.cursor()
 proxy = {'http':'http://122.192.174.187:43781','https':'https://122.192.174.187:43781'}
 city_en = 'shenzhen'
-city_zh = '深圳'
+city_zh = '深圳$7$shenzhen'
 headers = {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
             'Accept-Encoding': 'gzip, deflate',
