@@ -59,22 +59,6 @@ class dp_meishi:
         'X-Request': 'JSON',
         'X-Requested-With': 'XMLHttpRequest',
         }
-        self.data = {
-            'cityId': self.cityId,
-            'cityEnName': self.city_en_name,
-            'promoId': '0',
-            'shopType': self.chtype,
-            'categoryId': '112',
-            'regionId': '0',
-            'sortMode': '2',
-            'shopSortItem': '0',
-            'keyword': '',
-            'searchType': '1',
-            'branchGroupId': '0',
-            'aroundShopId': '0',
-            'shippingTypeFilterValue': '0',
-            'page': '1',
-        }
 
     def get_list(self,kwargs):
         self.headers['Referer'] = f'http://www.dianping.com/search/map/category/{self.cityId}/{self.chtype}/{self.g_id}'
@@ -181,6 +165,24 @@ class dp_meishi:
         else:
             kwargs['region'] = dp_args.split(';')[3].split('$')[1]
             self.r_id = dp_args.split(';')[3].split('$')[0]
+
+        self.data = {
+            'cityId': self.cityId,
+            'cityEnName': self.city_en_name,
+            'promoId': '0',
+            'shopType': self.chtype,
+            'categoryId': '112',
+            'regionId': '0',
+            'sortMode': '2',
+            'shopSortItem': '0',
+            'keyword': '',
+            'searchType': '1',
+            'branchGroupId': '0',
+            'aroundShopId': '0',
+            'shippingTypeFilterValue': '0',
+            'page': '1',
+        }
+
         return kwargs
 
     def clean_kwargs(self,**kwargs):
