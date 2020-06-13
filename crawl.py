@@ -101,6 +101,10 @@ class dp_meishi:
                 if self.page == 1:
                     self.page_count = json_resp['pageCount']
                 for shop in json_resp['shopRecordBeanList']:
+                    # 去重过滤
+                    if redis_cli.sismember(redis_filter_name,shop['shopId']):
+                        # print('这家店铺已存在-------：',shop['shopName'])
+                        continue
                     kwargs['shopid'] = shop['shopId']
                     kwargs['shopname'] = shop['shopName'].replace("'",'‘')
                     kwargs['shop_score'] = shop['shopPower']
@@ -125,6 +129,8 @@ class dp_meishi:
                     kwargs = self.clean_kwargs(**kwargs)
                     self.insert_shop_info(**kwargs)
                     self.insert_comment(comm_kwargs_list)
+                    # 添加到过滤池
+                    redis_cli.sadd(redis_filter_name,kwargs['shopid'])
             else:
                 if self.page > 100:
                     self.page_count = self.page + 1
