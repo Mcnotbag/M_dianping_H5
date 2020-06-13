@@ -159,7 +159,7 @@ class dp_meishi:
         self.city_en_name = dp_args.split(';')[-1].split('$')[-1]
         self.cityId = dp_args.split(';')[-1].split('$')[1]
         kwargs['district'] = dp_args.split(';')[2].split('$')[1]
-        if len(dp_args.split(';')) == 3:
+        if len(dp_args.split(';')) == 4:
             kwargs['region'] = ''
             self.r_id = dp_args.split(';')[2].split('$')[0]
         else:
