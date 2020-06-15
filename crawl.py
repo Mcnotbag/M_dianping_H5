@@ -35,8 +35,8 @@ class dp_meishi:
         # self.city_name = '广州市'
         # self.city_en_name = ''
         # self.cityId = ''
-        self.chtype = '20'
-        self.chtype_name = '购物'
+        self.chtype = '10'
+        self.chtype_name = '美食'
         self.proxy = get_ip()
         self.g_id = None
         self.r_id = None
@@ -84,6 +84,8 @@ class dp_meishi:
                 get_success(self.proxy)
                 if self.page == 1:
                     self.page_count = json_resp['pageCount']
+                    if self.page_count > 50:
+                        self.page_count = 50
                 for shop in json_resp['shopRecordBeanList']:
                     # 去重过滤
                     if redis_cli.sismember(redis_filter_name,shop['shopId']):
@@ -174,7 +176,7 @@ class dp_meishi:
             'categoryId': '112',
             'regionId': '0',
             'sortMode': '2', # 1 按价钱低到高 Item 8;
-            'shopSortItem': '0', # 2 按人气 ；3 按总体；11 按评论数；9 价格高到低； 0 默认；
+            'shopSortItem': '2', # 2 按人气 ；3 按总体；11 按评论数；9 价格高到低； 0 默认；
             'keyword': '',
             'searchType': '1',
             'branchGroupId': '0',

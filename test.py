@@ -4,8 +4,11 @@ import os
 
 import psycopg2
 import redis
-
-redis_cli = redis.Redis(decode_responses=True)
+import requests
+from fake_useragent import UserAgent
+# from setting import ua
+ua = UserAgent(path='tools/ua.json')
+# redis_cli = redis.Redis(decode_responses=True)
 # filename = [i for i in os.listdir('woff_file') if '.json' in i]
 # print(filename)
 #
@@ -42,9 +45,9 @@ def get_hc_v():
 
 
 # comment = {'user_name': '阳光365家具', 'user_level': 'lv1', 'user_vip': 0, 'shopname': '阳光365办公家具(龙华店)', 'shop_score': 50.0, 'pro_score': '产品：5.0', 'env_score': '5.0', 'ser_score': '5.0', 'comment': '深圳市龙华新区和平东路清湖地铁口阳光365国际家具广场办公家具民用家具', 'com_date': '2014-01-17 16:45', 'url': 'http://www.dianping.com/shop/l2oIht3PEa2N4chc/review_all', 'create_time': '2020-06-05 08:07:35', 'shopid': 'l2oIht3PEa2N4chc', 'id': 'd1ac7f653e4d15200029d8716e6773c1'}
-comment = {'user_name': '萍儿._1983', 'user_level': 'lv1', 'user_vip': 0, 'shopname': '雅兰床垫(布吉大芬店)', 'shop_score': 50.0, 'pro_score': '', 'env_score': '', 'ser_score': '', 'comment': '多家对比还是觉得雅兰老品牌，质量很好，睡得安心，用的放心，可以让家人有个好的睡眠是至关重要，身体健康要有好的睡眠，所以一张好的床垫很重要，店员也服务热情，产品讲解很透澈。', 'com_date': '2020-01-02 14:01', 'url': 'http://www.dianping.com/shop/k7vJnN5aWHtFKXGq/review_all', 'create_time': '2020-06-05 16:23:08', 'shopid': 'k7vJnN5aWHtFKXGq', 'id': 'd7ced967794cadf35f236e6528cfcc1b'}
-conn = psycopg2.connect(database="mt_wm_test", user="postgres", password="postgres", host="localhost", port="8635")
-cur = conn.cursor()
+# comment = {'user_name': '萍儿._1983', 'user_level': 'lv1', 'user_vip': 0, 'shopname': '雅兰床垫(布吉大芬店)', 'shop_score': 50.0, 'pro_score': '', 'env_score': '', 'ser_score': '', 'comment': '多家对比还是觉得雅兰老品牌，质量很好，睡得安心，用的放心，可以让家人有个好的睡眠是至关重要，身体健康要有好的睡眠，所以一张好的床垫很重要，店员也服务热情，产品讲解很透澈。', 'com_date': '2020-01-02 14:01', 'url': 'http://www.dianping.com/shop/k7vJnN5aWHtFKXGq/review_all', 'create_time': '2020-06-05 16:23:08', 'shopid': 'k7vJnN5aWHtFKXGq', 'id': 'd7ced967794cadf35f236e6528cfcc1b'}
+# conn = psycopg2.connect(database="mt_wm_test", user="postgres", password="postgres", host="localhost", port="8635")
+# cur = conn.cursor()
 
 # sql = """
 #             insert into dianping_comment values ('%(id)s','%(shopid)s','%(shopname)s','%(comment)s','%(url)s','%(user_name)s','%(user_level)s','%(user_vip)s','%(pro_score)s',
@@ -52,14 +55,40 @@ cur = conn.cursor()
 #             """ % comment
 # #
 # print(sql)
-sql = """insert into dianping_comment values ('88256ce564fb9f83c3f24ef37931db02','katN3yTjrf26wJd0','花之恋鲜花(福永店)','最喜欢这种鲜花，不仅是送花还是收花，感觉看到这些花心情就很好「产品」图片比什么都有说服力～鲜花很新鲜，篮子很好看(有点重，很有份量)。里面还有一个绿色泡沫，应该是放水给鲜花喝水的「服务」送达时间准时，当天要的时间比较早，没想到可以到的又快又好～','http://www.dianping.com/shop/katN3yTjrf26wJd0/review_all','一颗卤肉蛋','lv6','1','5.0',
-            '5.0','5.0','2019-08-21 17:24','2020-06-05 11:13:36','50.0')
-"""
-try:
-    cur.execute(sql)
-except Exception as e:
-    if e.__class__ == psycopg2.errors.UniqueViolation:
-        pass
-    else:
-        raise e
-conn.commit()
+data = {
+'cityId': '7',
+'cityEnName': 'shenzhen',
+'promoId': '0',
+'shopType': '10',
+'categoryId': '',
+'regionId': '',
+'sortMode': '2',
+'shopSortItem': '9',
+'searchType': '1',
+'branchGroupId': '0',
+'aroundShopId': '0',
+'shippingTypeFilterValue': '0',
+'page': '49',
+# 'glong1': '113.9645130316162',
+# 'glat1': '22.54462384940838',
+# 'glong2': '113.976829',
+# 'glat2': '22.527975'
+}
+headers = {
+        'Accept': 'application/json, text/javascript',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'zh-CN,zh;q=0.9',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8;',
+        'Host': 'www.dianping.com',
+        'Origin': 'http://www.dianping.com',
+        'Referer': 'http://www.dianping.com/search/map/category/7/20/g112',
+        'User-Agent': ua.random,
+        # 'Cookie': 's_ViewType=10; _lxsdk_cuid=17263a5f11cc8-0a35404038c5e8-f7d1d38-1fa400-17263a5f11c6f',
+            'Cookie':"_hc.v={};s_ViewType=10;".format(get_hc_v()),
+        'X-Request': 'JSON',
+        'X-Requested-With': 'XMLHttpRequest',
+        }
+
+resp = requests.post(url='http://www.dianping.com/search/map/ajax/json',headers=headers,data=data)
+print(resp.content.decode())
