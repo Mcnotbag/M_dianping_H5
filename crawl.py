@@ -125,8 +125,8 @@ class dp_meishi:
                 if json_resp['code'] != 500:
                     get_success(self.proxy)
                     self.proxy = get_ip()
-                    # if self.page == 1:
-                    #     redis_cli.sadd(redis_name, self.args)
+                    if self.page > 1:
+                        redis_cli.sadd(redis_name, self.args)
                 # 如果翻页到50以后，不能将IP认定为不能使用
                 # if self.page < 50:
                 #     # get_error(self.proxy)
@@ -138,8 +138,7 @@ class dp_meishi:
 
         else:
             print('状态码不是200：,',response.status_code)
-            if self.page == 1:
-                redis_cli.sadd(redis_name,self.args)
+            redis_cli.sadd(redis_name,self.args)
             get_error(self.proxy)
             self.proxy = get_ip()
         # print('当前IP：', self.proxy)
