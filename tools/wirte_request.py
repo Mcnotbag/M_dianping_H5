@@ -23,7 +23,7 @@ def wirte_redis_request():
                     # category_3_id = '210'
                     category_3_title = category_3.split('$')[0]
                     for r in os.listdir(region_path):
-                        put_str = filename.replace('.txt', '') + ';' + category_3 + ';' + r.replace('.txt','') + ';' + region_path_str
+                        put_str = filename.replace('.txt', '') + ';' + category_3 + ';' + r.replace('.txt','') + ';' + region_path_str + ';' + '1'
                         print(put_str)
                         redis_cli.sadd(redis_name,put_str)
                         with open(region_path + r,'r',encoding='utf-8') as f:
@@ -31,7 +31,7 @@ def wirte_redis_request():
                             for region_str in region_list:
                                 if region_str == '':
                                     continue
-                                put_str = filename.replace('.txt','') + ';' + category_3 + ';' + r.replace('.txt','') + ';' + region_str + ';' + region_path_str
+                                put_str = filename.replace('.txt','') + ';' + category_3 + ';' + r.replace('.txt','') + ';' + region_str + ';' + region_path_str + ';' + '1'
                                 print(put_str)
                                 redis_cli.sadd(redis_name,put_str)
 

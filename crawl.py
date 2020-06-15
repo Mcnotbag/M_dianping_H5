@@ -40,7 +40,7 @@ class dp_meishi:
         self.proxy = get_ip()
         self.g_id = None
         self.r_id = None
-        self.page = 1
+        # self.page = 1
         self.args = dp_args
         self.page_count = 1
         self.list_url = 'http://www.dianping.com/search/map/ajax/json'
@@ -86,6 +86,9 @@ class dp_meishi:
                     self.page_count = json_resp['pageCount']
                     if self.page_count > 50:
                         self.page_count = 50
+                for page in range(2,self.page_count):
+                    args_str = self.args.split(';')[:-1] + ';' + str(page)
+                    redis_cli.sadd(redis_name,args_str)
                 for shop in json_resp['shopRecordBeanList']:
                     # 去重过滤
                     if redis_cli.sismember(redis_filter_name,shop['shopId']):
@@ -155,11 +158,12 @@ class dp_meishi:
         kwargs['category_tags_l2_name'] = dp_args.split(';')[0].split('$')[1]
         kwargs['category_tags_l3_name'] = dp_args.split(';')[1].split('$')[1]
         self.g_id = dp_args.split(';')[1].split('$')[0]
-        kwargs['city'] = dp_args.split(';')[-1].split('$')[0] + '市'
-        self.city_en_name = dp_args.split(';')[-1].split('$')[-1]
-        self.cityId = dp_args.split(';')[-1].split('$')[1]
+        kwargs['city'] = dp_args.split(';')[-2].split('$')[0] + '市'
+        self.city_en_name = dp_args.split(';')[-2].split('$')[-1]
+        self.cityId = dp_args.split(';')[-2].split('$')[1]
+        self.page = int(dp_args.split(';')[-1])
         kwargs['district'] = dp_args.split(';')[2].split('$')[1]
-        if len(dp_args.split(';')) == 4:
+        if len(dp_args.split(';')) == 5:
             kwargs['region'] = ''
             self.r_id = dp_args.split(';')[2].split('$')[0]
         else:

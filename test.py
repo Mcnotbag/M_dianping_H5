@@ -60,7 +60,7 @@ data = {
 'cityEnName': 'shenzhen',
 'promoId': '0',
 'shopType': '10',
-'categoryId': '',
+'categoryId': '3017',
 'regionId': '',
 'sortMode': '2',
 'shopSortItem': '',
@@ -71,8 +71,8 @@ data = {
 'page': '1',
 # 'glong1': '113.9645130316162',
 # 'glat1': '22.54462384940838',
-# 'glong2': '113.976829',
-# 'glat2': '22.527975'
+'glong2': '113.976829',
+'glat2': '22.527975'
 }
 headers = {
         'Accept': 'application/json, text/javascript',
