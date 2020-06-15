@@ -173,8 +173,8 @@ class dp_meishi:
             'shopType': self.chtype,
             'categoryId': '112',
             'regionId': '0',
-            'sortMode': '2',
-            'shopSortItem': '0',
+            'sortMode': '2', # 1 按价钱低到高 Item 8;
+            'shopSortItem': '0', # 2 按人气 ；3 按总体；11 按评论数；9 价格高到低； 0 默认；
             'keyword': '',
             'searchType': '1',
             'branchGroupId': '0',
