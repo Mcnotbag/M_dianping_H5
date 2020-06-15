@@ -35,8 +35,8 @@ class dp_meishi:
         # self.city_name = '广州市'
         # self.city_en_name = ''
         # self.cityId = ''
-        self.chtype = '10'
-        self.chtype_name = '美食'
+        self.chtype = '20'
+        self.chtype_name = '购物'
         self.proxy = get_ip()
         self.g_id = None
         self.r_id = None
@@ -243,7 +243,8 @@ class dp_meishi:
                     conn.rollback()
                 else:
                     print('sql:', sql)
-                    raise e
+                    print('error:',e)
+                    conn.rollback()
         # print('评论插入成功：')
 
     def insert_shop_info(self,**kwargs):

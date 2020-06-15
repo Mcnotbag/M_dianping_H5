@@ -4,9 +4,9 @@ from redis import Redis
 
 # 线上
 redis_cli = Redis(host='10.101.0.239',password='abc123',decode_responses=True)
-redis_name = 'dp_ch10'
+redis_name = 'dp_ch20'
 def wirte_redis_request():
-    cate_path = '../category/美食/'
+    cate_path = '../category/购物/'
     region_path = '../region/'
     for region_path_str in os.listdir(region_path):
         region_path = '../region/' + region_path_str + '/'
