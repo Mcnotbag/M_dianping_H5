@@ -118,8 +118,6 @@ class dp_meishi:
                     # 添加到过滤池
                     redis_cli.sadd(redis_filter_name,kwargs['shopid'])
             else:
-                if self.page > 100:
-                    self.page_count = self.page + 1
                 print('code 不是200：--------',json_resp['code'])
                 if json_resp['code'] != 500:
                     get_success(self.proxy)
